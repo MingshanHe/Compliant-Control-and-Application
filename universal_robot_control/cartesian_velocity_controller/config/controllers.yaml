@@ -1,0 +1,21 @@
+ur5:
+  # Controller for the real hardware (velocity interface)
+  cartesian_velocity_controller:
+    type: cartesian_controller/CartesianVelocityController
+    publish_rate: 125
+    root_name: base_link
+    tip_name: ee_link
+
+  # Controller for gazebo (velocity interface on top of a position interface)
+  cartesian_velocity_controller_sim:
+    type: cartesian_controller/CartesianVelocityControllerSim
+    publish_rate: 125
+    root_name: base_link
+    tip_name: ee_link
+
+  # Cartesian state publisher
+  cartesian_state_controller:
+    type: cartesian_controller/CartesianStateController
+    publish_rate: 125
+    root_name: base_link
+    tip_name: ee_link

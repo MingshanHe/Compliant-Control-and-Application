@@ -1,3 +1,10 @@
+/*
+ * @Author: MingshanHe 
+ * @Date: 2021-12-05 04:09:41 
+ * @Last Modified by:   MingshanHe 
+ * @Last Modified time: 2021-12-05 04:09:41 
+ * @Licence: MIT Licence
+ */
 #include <pluginlib/class_list_macros.h>
 #include "cartesian_velocity_controller/kinematics_base.h"
 #include "cartesian_velocity_controller/cartesian_velocity_controller.h"
@@ -68,13 +75,12 @@ void Cartesian_Velocity_Controller::update(const ros::Time& time, const ros::Dur
   // Get joint positions
   for(std::size_t i=0; i < this->joint_handles_.size(); i++)
   {
-    if(fabs(this->joint_handles_[i].getPosition()-(this->joint_state_.q(i) + Jnt_Vel_Cmd_(i)*period.toSec()))<0.0000001 || Jnt_Vel_Cmd_(i)!=0)
-    {
+    // if(fabs(this->joint_handles_[i].getPosition()-(this->joint_state_.q(i) + Jnt_Vel_Cmd_(i)*period.toSec()))<0.0000001 || Jnt_Vel_Cmd_(i)!=0)
+    // {
       this->joint_state_.q(i)         = this->joint_handles_[i].getPosition();
       this->joint_state_.qdot(i)      = this->joint_handles_[i].getVelocity();
       this->joint_effort_(i)        = this->joint_handles_[i].getEffort();
-    }
-
+    // }
   }
   // Compute inverse kinematics velocity solver
   ik_vel_solver_->CartToJnt(this->joint_state_.q, End_Vel_Cmd_, Jnt_Vel_Cmd_);

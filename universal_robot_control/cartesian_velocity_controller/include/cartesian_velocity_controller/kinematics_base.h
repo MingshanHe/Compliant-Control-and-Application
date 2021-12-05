@@ -1,3 +1,10 @@
+/*
+ * @Author: MingshanHe 
+ * @Date: 2021-12-05 04:09:34 
+ * @Last Modified by:   MingshanHe 
+ * @Last Modified time: 2021-12-05 04:09:34 
+ * @Licence: MIT Licence
+ */
 #ifndef KINEMATICS_BASE_H
 #define KINEMATICS_BASE_H
 

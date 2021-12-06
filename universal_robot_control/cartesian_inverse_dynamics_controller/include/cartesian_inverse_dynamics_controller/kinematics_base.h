@@ -38,6 +38,7 @@ protected:
     KDL::Chain          kdl_chain_;
     KDL::JntArrayVel    joint_state_;
     KDL::JntArray       joint_effort_;
+    KDL::Vector         gravity_;
     struct limits_
     {
         KDL::JntArray min;
@@ -173,6 +174,7 @@ bool Kinematics_Base::init(hardware_interface::EffortJointInterface *robot, ros:
     }
     ROS_INFO("Number of joints in handle = %lu", joint_handles_.size() );
     ROS_INFO_STREAM("kdl_chain.getNrOfJoints: " << kdl_chain_.getNrOfJoints());
+    gravity_ = KDL::Vector(0,0,-9.8);
     ROS_INFO("Finished Kinematic Base init");
     return true;
 }

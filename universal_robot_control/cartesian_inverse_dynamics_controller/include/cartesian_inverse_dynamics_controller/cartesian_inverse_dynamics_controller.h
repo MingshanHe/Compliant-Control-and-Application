@@ -37,7 +37,16 @@ protected:
     boost::shared_ptr<KDL::ChainIkSolverVel>    ik_vel_solver_;
 
     KDL::Wrench                                 wrench_wrist_;
-    
+    KDL::Wrench                                 base_wrench_wrist_;
+
+    KDL::JntArray                               Jnt_Pos_State_;
+    KDL::JntArrayVel                            Jnt_Vel_State_;
+
+    KDL::JntSpaceInertiaMatrix                  B;
+    KDL::JntArray                               C;
+
+    KDL::Jacobian                               base_J_ee;
+    KDL::Frame                                  End_Pos_;
     // boost::shared_ptr<realtime_tools::RealtimePublisher<
     //     cartesian_state_msgs::PoseTwist> > realtime_pub_;
 

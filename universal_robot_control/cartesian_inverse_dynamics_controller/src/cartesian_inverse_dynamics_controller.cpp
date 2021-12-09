@@ -10,40 +10,17 @@ bool Cartesian_Inverse_Dynamics_Controller::init(
 )
 {
     kinematics_base::Kinematics_Base::init(robot, n);
-    dyn_param_solver_.reset(new KDL::ChianDynParam(this->kdl_chain_, this->gravity_));
+    dyn_param_solver_.reset(new KDL::ChainDynParam(this->kdl_chain_, this->gravity_));
     ee_jacobian_solver_.reset(new KDL::ChainJntToJacSolver(this->kdl_chain_));
     ik_vel_solver_.reset(new KDL::ChainIkSolverVel_pinv_givens(this->kdl_chain_));
     fk_vel_solver_.reset(new KDL::ChainFkSolverVel_recursive(this->kdl_chain_));
     fk_pos_solver_.reset(new KDL::ChainFkSolverPos_recursive(this->kdl_chain_));
 
     wrench_wrist_       = KDL::Wrench();
-    base_wrench_wrist_  = KDL::Wrench();
 
-    // sub_force_ = n.subscriber("ft_sensor_topic_name",1,)
-
-  // get publishing period
-    // if (!n.getParam("publish_rate", publish_rate_)){
-    //     ROS_ERROR("Parameter 'publish_rate' not set");
-    //     return false;
-    // }
-//   realtime_pub_.reset(new realtime_tools::RealtimePublisher
-//     <cartesian_state_msgs::PoseTwist>(n, "ee_state", 4));
-
-
-    // Topics
-    // sub_command_ = n.subscribe("command_cart_vel", 5,
-    //     &Cartesian_Velocity_Controller::command_cart_vel, this,
-    //     ros::TransportHints().reliable().tcpNoDelay());
-
-    // Variable init
-    // this->joint_state_.resize(this->kdl_chain_.getNrOfJoints());
-    // this->joint_effort_.resize(this->kdl_chain_.getNrOfJoints());
-    // Jnt_Vel_Cmd_.resize(this->kdl_chain_.getNrOfJoints());
-    // End_Vel_Cmd_ = KDL::Twist::Zero();
-    // End_Pos_.p.Zero();
-    // End_Pos_.M.Identity();
-    // End_Vel_.p.Zero();
-    // End_Vel_.M.Identity();
+    sub_command_ = n.subscribe ("/wrench",5,
+                                &Cartesian_Inverse_Dynamics_Controller::command_cart_tau, this,
+                                ros::TransportHints().reliable().tcpNoDelay());
 
     return true;
 }
@@ -52,63 +29,71 @@ void Cartesian_Inverse_Dynamics_Controller::starting(const ros::Time& time)
 {
     Jnt_Pos_State_.resize(this->kdl_chain_.getNrOfJoints());
     Jnt_Vel_State_.resize(this->kdl_chain_.getNrOfJoints());
+    Jnt_Acc_State_.resize(this->kdl_chain_.getNrOfJoints());
 
     B.resize(this->kdl_chain_.getNrOfJoints());
-    C.resize(this->kdl_Chain_.getNrOfJoints());
+    C.resize(this->kdl_chain_.getNrOfJoints());
+    G.resize(this->kdl_chain_.getNrOfJoints());
+
+
     base_J_ee.resize(this->kdl_chain_.getNrOfJoints());
     last_publish_time_ = time;
+    for(size_t i=0; i<kdl_chain_.getNrOfJoints(); i++)
+    {
+        Jnt_Vel_Past_State_.q(i)         = this->joint_handles_[i].getPosition();
+        Jnt_Vel_Past_State_.qdot(i)      = this->joint_handles_[i].getVelocity();
+    }
 }
 
 void Cartesian_Inverse_Dynamics_Controller::update(const ros::Time& time, const ros::Duration& period)
 {
     // robot configuration
+    // double dt = period.toSec();
+    // Jnt_Acc_State_.data = (Jnt_Vel_State_.qdot.data - Jnt_Vel_Past_State_.qdot.data) / (dt);
     for(size_t i=0; i<kdl_chain_.getNrOfJoints(); i++)
     {
-        Jnt_Pos_State_(i)       = this->joint_handles_[i].getPosition();
-        Jnt_Vel_State_.q(i)     = joint_handles_[i].getPosition();
-        Jnt_Vel_State_.qdot(i)  = joint_handles_[i].getVelocity();
+        Jnt_Pos_State_(i)           =   this->joint_handles_[i].getPosition();
+        Jnt_Vel_State_.q(i)         =   this->joint_handles_[i].getPosition();
+        Jnt_Vel_Past_State_.qdot(i) =   Jnt_Vel_State_.qdot(i);
+        Jnt_Vel_State_.qdot(i)      =   this->joint_handles_[i].getVelocity();
     }
-    // Joint Space Inertia Matrix B and Coriolis term C * q dot
-    dyn_param_solver_->JntToMass(Jnt_Pos_State,q, Jnt_Vel_State.qdot, B);
-    dyn_param_solver_->JntToCoriolis(Jnt_Vel_State.q, Jnt_Vel_State.qdot, C);
+    // Joint Space Inertia Matrix B , Coriolis term C * q dot , Gravity G
+    dyn_param_solver_->JntToMass(Jnt_Pos_State_, B);
+    dyn_param_solver_->JntToCoriolis(Jnt_Vel_State_.q, Jnt_Vel_State_.qdot, C);
+    dyn_param_solver_->JntToGravity(Jnt_Pos_State_, G);
     // Geometric Jacobians
-    ee_jacobian_solver_->JntToJac(Jnt_Pos_State_, base_J_ee);
+    // ee_jacobian_solver_->JntToJac(Jnt_Pos_State_, base_J_ee);
     //Forward Kinematics
-    fk_pos_solver_->JntToCart(Jnt_Pos_State_, End_Pos_);
-    
-    // for(std::size_t i=0; i < this->joint_handles_.size(); i++)
-    // {
-    //     // if(fabs(this->joint_handles_[i].getPosition()-(this->joint_state_.q(i) + Jnt_Vel_Cmd_(i)*period.toSec()))<0.0000001 || Jnt_Vel_Cmd_(i)!=0)
-    //     // {
-    //     this->joint_state_.q(i)         = this->joint_handles_[i].getPosition();
-    //     this->joint_state_.qdot(i)      = this->joint_handles_[i].getVelocity();
-    //     this->joint_effort_(i)        = this->joint_handles_[i].getEffort();
-    //     // }
-    // }
-    // // Compute inverse kinematics velocity solver
-    // ik_vel_solver_->CartToJnt(this->joint_state_.q, End_Vel_Cmd_, Jnt_Vel_Cmd_);
-    // writeVelocityCommands(period);
+    // fk_pos_solver_->JntToCart(Jnt_Pos_State_, End_Pos_);
 
-    // // Forward kinematics
-    // fk_vel_solver_->JntToCart(this->joint_state_, End_Vel_);
-    // fk_pos_solver_->JntToCart(this->joint_state_.q, End_Pos_);
+    // Jnt_Effort = B.data*Jnt_Acc_State_.data + C.data + G.data;
 
-    // // Limit rate of publishing
-    // if (publish_rate_ > 0.0 && last_publish_time_
-    //     + ros::Duration(1.0/publish_rate_) < time) {
+    writeTorqueCommands(period);
 
-    //     // try to publish
-    //     if (realtime_pub_->trylock()) {
-    //     last_publish_time_ = last_publish_time_
-    //                         + ros::Duration(1.0/publish_rate_);
-    //     // populate message
-    //     realtime_pub_->msg_.header.stamp = time;
-    //     tf::poseKDLToMsg(End_Pos_, realtime_pub_->msg_.pose);
-    //     tf::twistKDLToMsg(End_Vel_.GetTwist(), realtime_pub_->msg_.twist);
-
-    //     realtime_pub_->unlockAndPublish();
-    //     }
-    // }
+}
+void Cartesian_Inverse_Dynamics_Controller::writeTorqueCommands(const ros::Duration &period)
+{
+    // this->joint_handles_[0].setCommand(Jnt_Effort(0));
+    // this->joint_handles_[1].setCommand(Jnt_Effort(1));
+    // this->joint_handles_[2].setCommand(Jnt_Effort(2));
+    // this->joint_handles_[3].setCommand(Jnt_Effort(3));
+    // this->joint_handles_[4].setCommand(Jnt_Effort(4));
+    // this->joint_handles_[5].setCommand(Jnt_Effort(5));
+    this->joint_handles_[0].setCommand(0.0);
+    this->joint_handles_[1].setCommand(0.0);
+    this->joint_handles_[2].setCommand(0.0);
+    this->joint_handles_[3].setCommand(0.0);
+    this->joint_handles_[4].setCommand(0.0);
+    this->joint_handles_[5].setCommand(0.0);
+}
+void Cartesian_Inverse_Dynamics_Controller::command_cart_tau(const geometry_msgs::Wrench &msg)
+{
+    wrench_wrist_.force(0) = msg.force.x;
+    wrench_wrist_.force(1) = msg.force.y;
+    wrench_wrist_.force(2) = msg.force.z;
+    wrench_wrist_.torque(0) = msg.torque.x;
+    wrench_wrist_.torque(1) = msg.torque.y;
+    wrench_wrist_.torque(2) = msg.torque.z;
 }
 }
 

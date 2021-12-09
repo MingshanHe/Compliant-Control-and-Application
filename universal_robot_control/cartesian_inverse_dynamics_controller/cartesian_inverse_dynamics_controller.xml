@@ -1,0 +1,7 @@
+<library path="lib/libcartesian_inverse_dynamics_controller">
+  <class name="cartesian_controller/CartesianInverseDynamicsController" type="cartesian_inverse_dynamics_controller::Cartesian_Inverse_Dynamics_Controller" base_class_type="controller_interface::ControllerBase">
+    <description>
+        Cartesian Inverse Dynamics control
+    </description>
+  </class>
+</library>

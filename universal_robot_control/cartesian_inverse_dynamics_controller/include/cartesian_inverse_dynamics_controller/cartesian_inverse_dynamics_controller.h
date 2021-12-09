@@ -2,6 +2,7 @@
 #define CARTESIAN_INVERSE_DYNAMICS_CONTROLLER_H
 
 #include <ros/ros.h>
+#include <geometry_msgs/Wrench.h>
 #include "kinematics_base.h"
 namespace cartesian_inverse_dynamics_controller
 {
@@ -18,15 +19,16 @@ public:
 
     void update(const ros::Time &time, const ros::Duration &period);
 
+    void command_cart_tau(const geometry_msgs::Wrench &msg);
+
     // void command_cart_vel(const geometry_msgs::Twist)
 private:
-
+    void writeTorqueCommands(const ros::Duration &period);
 protected:
-    ros::Subscriber             sub_command_;
-    ros::Subscriber             sub_force_;
+    ros::Subscriber                             sub_command_;
 
-    ros::Time                   last_publish_time_;
-    double                      publish_rate;
+    ros::Time                                   last_publish_time_;
+    double                                      publish_rate;
 
     //KDL
     boost::shared_ptr<KDL::ChainDynParam>       dyn_param_solver_;
@@ -37,13 +39,17 @@ protected:
     boost::shared_ptr<KDL::ChainIkSolverVel>    ik_vel_solver_;
 
     KDL::Wrench                                 wrench_wrist_;
-    KDL::Wrench                                 base_wrench_wrist_;
 
     KDL::JntArray                               Jnt_Pos_State_;
     KDL::JntArrayVel                            Jnt_Vel_State_;
+    KDL::JntArrayVel                            Jnt_Vel_Past_State_;
+    KDL::JntArray                               Jnt_Acc_State_;
 
     KDL::JntSpaceInertiaMatrix                  B;
     KDL::JntArray                               C;
+    KDL::JntArray                               G;
+
+    Eigen::MatrixXd                             Jnt_Effort;
 
     KDL::Jacobian                               base_J_ee;
     KDL::Frame                                  End_Pos_;

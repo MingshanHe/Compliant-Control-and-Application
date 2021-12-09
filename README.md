@@ -56,4 +56,4 @@ $ roslaunch hybrid_position_force_control hybrid_position_force_control.launch
 
 ### 2. Hybrid Position Force Control
 
-![](Image/Hybrid Position Force Control.gif)
+![](Image/Hybrid_Position_Force_Control.gif)

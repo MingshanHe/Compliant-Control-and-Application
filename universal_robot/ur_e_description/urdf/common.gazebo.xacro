@@ -7,6 +7,7 @@
       <!--robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType-->
       <legacyModeNS>true</legacyModeNS>
     </plugin>
+
 <!--
     <plugin name="gazebo_ros_power_monitor_controller" filename="libgazebo_ros_power_monitor.so">
       <alwaysOn>true</alwaysOn>
@@ -22,5 +23,14 @@
     </plugin>
 -->
   </gazebo>
-
+  <gazebo reference="wrist_3_joint">
+     <provideFeedback>true</provideFeedback>
+  </gazebo>
+  <gazebo>
+    <plugin name="wrench" filename="libgazebo_ros_ft_sensor.so">
+      <updateRate>100.0</updateRate>
+      <topicName>wrench</topicName>
+      <jointName>wrist_3_joint</jointName>
+    </plugin>
+</gazebo>
 </robot>

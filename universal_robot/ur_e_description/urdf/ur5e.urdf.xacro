@@ -378,5 +378,22 @@
       <child link="${prefix}tool0"/>
     </joint>
 
+    <!-- wrench sensor -->
+    <joint name="wrench_sensor_joint" type="revolute">
+      <parent link="${prefix}ee_link" />
+      <child link="${prefix}wrench_link" />
+      <axis xyz="0 0 1" />
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${pi/2.0}" />
+      <limit velocity="6.5" effort="1000" lower="0" upper="0" />
+    </joint>
+
+    <link name="${prefix}wrench_link">
+      <collision>
+        <geometry>
+          <box size="0.01 0.01 0.01"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="-0.01 0 0"/>
+      </collision>
+    </link>
   </xacro:macro>
 </robot>

@@ -7,6 +7,7 @@
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}shoulder_pan_joint">
         <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <!-- <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface> -->
       </joint>
       <actuator name="${prefix}shoulder_pan_motor">
         <mechanicalReduction>1</mechanicalReduction>
@@ -17,6 +18,7 @@
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}shoulder_lift_joint">
         <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <!-- <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface> -->
       </joint>
       <actuator name="${prefix}shoulder_lift_motor">
         <mechanicalReduction>1</mechanicalReduction>
@@ -27,6 +29,7 @@
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}elbow_joint">
         <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <!-- <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface> -->
       </joint>
       <actuator name="${prefix}elbow_motor">
         <mechanicalReduction>1</mechanicalReduction>
@@ -37,6 +40,7 @@
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}wrist_1_joint">
         <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <!-- <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface> -->
       </joint>
       <actuator name="${prefix}wrist_1_motor">
         <mechanicalReduction>1</mechanicalReduction>
@@ -47,6 +51,7 @@
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}wrist_2_joint">
         <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <!-- <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface> -->
       </joint>
       <actuator name="${prefix}wrist_2_motor">
         <mechanicalReduction>1</mechanicalReduction>
@@ -57,6 +62,7 @@
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}wrist_3_joint">
         <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <!-- <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface> -->
       </joint>
       <actuator name="${prefix}wrist_3_motor">
         <mechanicalReduction>1</mechanicalReduction>

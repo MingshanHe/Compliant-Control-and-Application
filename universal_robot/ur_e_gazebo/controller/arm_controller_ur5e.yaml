@@ -37,7 +37,7 @@ hardware_interface:
     - wrist_1_joint
     - wrist_2_joint
     - wrist_3_joint
-ur5_cartesian_velocity_controller_sim:
+cartesian_velocity_controller_sim:
   type: cartesian_controller/CartesianVelocityController
   publish_rate: 125
   root_name: base_link
@@ -49,4 +49,21 @@ ur5_cartesian_velocity_controller_sim:
     - wrist_1_joint
     - wrist_2_joint
     - wrist_3_joint
+cartesian_position_controller_sim:
+  type: cartesian_controller/CartesianPositionController
+  publish_rate: 125
+  root_name: base_link
+  tip_name: ee_link
+  joints:
+    - shoulder_pan_joint
+    - shoulder_lift_joint
+    - elbow_joint
+    - wrist_1_joint
+    - wrist_2_joint
+    - wrist_3_joint
+cartesian_inverse_dynamics_controller_sim:
+  type: cartesian_controller/CartesianInverseDynamicsController
+  publish_rate: 125
+  root_name: base_link
+  tip_name: ee_link
 

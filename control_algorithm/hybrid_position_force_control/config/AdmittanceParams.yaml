@@ -1,0 +1,34 @@
+mass_arm: [2,0,0,0,0,0,
+           0,2,0,0,0,0,
+           0,0,2,0,0,0,
+           0,0,0,2,0,0,
+           0,0,0,0,2,0,
+           0,0,0,0,0,2]
+damping_arm: [12,0,0,0,0,0,
+              0,12,0,0,0,0,
+              0,0,12,0,0,0,
+              0,0,0,10,0,0,
+              0,0,0,0,10,0,
+              0,0,0,0,0,10]
+stiffness_coupling: [10,0,0,0,0,0,
+                     0,10,0,0,0,0,
+                     0,0,10,0,0,0,
+                     0,0,0,5,0,0,
+                     0,0,0,0,5,0,
+                     0,0,0,0,0,5]
+
+base_link: "base_link"
+end_link: "ee_link"
+# [position (x, y, z)  orientation (x, y, z, w)]
+desired_pose:  [0.0,0.30,0.45,       0.00, 0.707, 0.00, 0.707]
+
+workspace_limits: [-0.50, 0.50, 0.25, 0.80, 0.30, 0.75]
+
+arm_max_vel: 1.5
+arm_max_acc: 1.0
+
+force_deadzone_thres: 350.0
+torque_deadzone_thres: 0.0
+
+platform_max_vel: 0.1
+platform_max_acc: 0.2

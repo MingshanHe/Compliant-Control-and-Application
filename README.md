@@ -48,12 +48,16 @@ $ roslaunch hybrid_position_force_control hybrid_position_force_control.launch
 
   And then it needs to use the topic publish command in the terminal. It is recommended to move to $[0.1,0.4,0.45]$ which along the **x** Axis at first, and then move to $[0.1,0.4,0.3]$ in **z** Axis. This makes the end contact with the curve surface and has a little slope angle. According to the force close-loop algorithm, the end effector will change its orientation to adapt it. At last, you command it to move to $[-0,1,0.4,0.3]$ along the **x** Axis which is simulated in the polish experiment. And the performance is shown in the following gif file.
 
+### 3. Rapidly-exploring Random Tree (RRT)
+
+
+
 ## Performance
 
 ### 1. Admittance
 
-![](Image/Admittance.gif)
+![1](Image/Admittance.gif)
 
 ### 2. Hybrid Position Force Control
 
-![](Image/Hybrid_Position_Force_Control.gif)
+![2](Image/Hybrid_Position_Force_Control.gif)

@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+<launch>
+
+  <node pkg="rrt_control" name="rrt_control_node" type="rrt_control_node" output="screen"/>
+  <node pkg="rosbag" type="record" name="bag_record" args="/Pose  -o $(find universal_robot_databag)/bag/3.bag"/>
+</launch>

@@ -1,11 +1,14 @@
 #include "rrt_control/rrt_control.h"
 
-RRT::RRT(const ros::NodeHandle &nh)
+RRT::RRT(
+    const ros::NodeHandle &nh,
+    vector<double>        workspace_limit):
+    workspace_limit_(workspace_limit)
 {
   double check_step = 0.01;
   obstacles.reset(new Obstacles(nh, check_step));
-  startPos  << 0,0,0;
-  endPos    << 1,1,1;
+  startPos  << 2,0,-2;
+  endPos    << 0,2,2;
 
   root = new Node;
   root->parent = NULL;
@@ -15,6 +18,7 @@ RRT::RRT(const ros::NodeHandle &nh)
   nodes.push_back(root);
   step_size = 3;
   max_iter = 3000;
+  initialize();
 }
 
 
@@ -37,14 +41,16 @@ void RRT::initialize()
 Node* RRT::getRandomNode()
 {
   //TODO: WORKSPACE
-    // Node* ret;
-    // Vector2f point(drand48() * WORLD_WIDTH, drand48() * WORLD_HEIGHT);
-    // if (point.x() >= 0 && point.x() <= WORLD_WIDTH && point.y() >= 0 && point.y() <= WORLD_HEIGHT) {
-    //     ret = new Node;
-    //     ret->position = point;
-    //     return ret;
-    // }
-    // return NULL;
+    Node* ret;
+    Vector3d point(
+        workspace_limit_[0]+drand48()*(workspace_limit_[3]-workspace_limit_[0]),
+        workspace_limit_[1]+drand48()*(workspace_limit_[4]-workspace_limit_[1]),
+        workspace_limit_[2]+drand48()*(workspace_limit_[5]-workspace_limit_[2]));
+    ret = new Node;
+    ret->position = point;
+    // printf("workspace: %f, %f, %f, %f, %f, %f\n", workspace_limit_[0],workspace_limit_[1],workspace_limit_[2],workspace_limit_[3],workspace_limit_[4],workspace_limit_[5]);
+    // printf("getRandomNode: %f, %f, %f\n", point[0],point[1],point[2]);
+    return ret;
 }
 
 /**
@@ -53,7 +59,7 @@ Node* RRT::getRandomNode()
  * @param q
  * @return
  */
-int RRT::distance(Vector3d &p, Vector3d &q)
+double RRT::distance(Vector3d &p, Vector3d &q)
 {
     Vector3d v = p - q;
     return sqrt(powf(v(0), 2) + powf(v(1), 2) + powf(v(2), 2));
@@ -66,10 +72,10 @@ int RRT::distance(Vector3d &p, Vector3d &q)
  */
 Node* RRT::nearest(Vector3d point)
 {
-    float minDist = 1e9;
+    double minDist = 1e9;
     Node *closest = NULL;
     for(int i = 0; i < (int)nodes.size(); i++) {
-        float dist = distance(point, nodes[i]->position);
+        double dist = distance(point, nodes[i]->position);
         if (dist < minDist) {
             minDist = dist;
             closest = nodes[i];
@@ -89,9 +95,12 @@ Vector3d RRT::newConfig(Node *q, Node *qNearest)
     Vector3d to = q->position;
     Vector3d from = qNearest->position;
     Vector3d intermediate = to - from;
-
+    // printf("from: %f, %f, %f\n", from[0],from[1],from[2]);
+    // printf("to: %f, %f, %f\n", to[0],to[1],to[2]);
     intermediate = intermediate / intermediate.norm();
+    // printf("intermediate: %f, %f, %f\n", intermediate[0],intermediate[1],intermediate[2]);
     Vector3d ret = from + step_size * intermediate;
+    // printf("newConfig: %f, %f, %f\n", ret[0],ret[1],ret[2]);
     return ret;
 }
 
@@ -114,13 +123,14 @@ void RRT::add(Node *qNearest, Node *qNew)
  */
 bool RRT::reached()
 {
-  //TODO: END_DIST_THRESHOLD CONFIGURATION
-    // if (distance(lastNode->position, endPos) < END_DIST_THRESHOLD)
-    //     return true;
-    // return false;
+    //TODO: END_DIST_THRESHOLD CONFIGURATION
+    double  END_DIST_THRESHOLD = 0.01;
+    if (distance(lastNode->position, endPos) < END_DIST_THRESHOLD)
+        return true;
+    return false;
 }
 
-void RRT::setStepSize(int step)
+void RRT::setStepSize(double step)
 {
     step_size = step;
 }

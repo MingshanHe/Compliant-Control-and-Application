@@ -3,9 +3,9 @@
   <!--
       Launch file for the admittance controller
   -->
-
-  <arg name="TOPIC_ARM_STATE" default="/ur5_cartesian_velocity_controller_sim/ee_state"/>
-  <arg name="TOPIC_ARM_COMMAND" default="/ur5_cartesian_velocity_controller_sim/command_cart_vel"/>
+  <!--for real robot, you can identify these topic and control it-->
+  <arg name="TOPIC_ARM_STATE" default="/cartesian_velocity_controller_sim/ee_state"/>
+  <arg name="TOPIC_ARM_COMMAND" default="/cartesian_velocity_controller_sim/command_cart_vel"/>
   <arg name="TOPIC_WRENCH_STATE" default="/wrench"/>
 
 

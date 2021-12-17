@@ -13,7 +13,7 @@
   First of all, running a gazebo environment and upload a universal robot. I usually chose a **ur5e**.
 
 ```bash
-$ roslaunch ur_e_gazebo ur5e.launch
+$ roslaunch ur_e_gazebo ur5e.launch controller:= cartesian_velocity_controller_sim
 ```
 
   Then, running the admittance control algorithm and you can observe the performance of it.
@@ -37,7 +37,7 @@ $ roslaunch Admittance Admittance.launch
   First of all, running the gazebo environment which contains a universal robot and a car wheel beside it.
 
 ```bash
-$ roslaunch ur_e_gazebo ur5e.launch
+$ roslaunch ur_e_gazebo ur5e.launch controller:=cartesian_velocity_controller_sim environment:=polish
 ```
 
   Then, running the hybrid position force control

@@ -1,0 +1,7 @@
+<library path="lib/libcartesian_MPC_controller">
+  <class name="cartesian_controller/CartesianMPCController" type="cartesian_mpc_controller::Cartesian_MPC_Controller" base_class_type="controller_interface::ControllerBase">
+    <description>
+        Cartesian MPC Control
+    </description>
+  </class>
+</library>

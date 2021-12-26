@@ -7,8 +7,8 @@ RRT::RRT(
 {
   double check_step = 0.01;
   obstacles.reset(new Obstacles(nh, check_step));
-  startPos  << 2,0,-2;
-  endPos    << 0,2,2;
+  startPos  << 0.0,0.50,0.50;
+  endPos    << 0.0,0.50,0.550;
 
   root = new Node;
   root->parent = NULL;
@@ -16,8 +16,6 @@ RRT::RRT(
   lastNode = root;
   
   nodes.push_back(root);
-  step_size = 3;
-  max_iter = 3000;
   initialize();
 }
 
@@ -72,7 +70,7 @@ double RRT::distance(Vector3d &p, Vector3d &q)
  */
 Node* RRT::nearest(Vector3d point)
 {
-    double minDist = 1e9;
+    double minDist = 10;
     Node *closest = NULL;
     for(int i = 0; i < (int)nodes.size(); i++) {
         double dist = distance(point, nodes[i]->position);
@@ -126,7 +124,10 @@ bool RRT::reached()
     //TODO: END_DIST_THRESHOLD CONFIGURATION
     double  END_DIST_THRESHOLD = 0.01;
     if (distance(lastNode->position, endPos) < END_DIST_THRESHOLD)
+    {
+        ROS_INFO("get reached.");
         return true;
+    }
     return false;
 }
 

@@ -48,7 +48,7 @@ private:
   vector<Node *>                nodes;
 
   int                           max_iter;
-  double                           step_size;
+  double                        step_size;
 };
 
 #endif // RRT_H

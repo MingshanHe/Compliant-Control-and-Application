@@ -1,6 +1,17 @@
 <?xml version="1.0" ?>
 <launch>
+  <arg name="TOPIC_ARM_STATE" default="/cartesian_position_controller_sim/ee_state"/>
+  <arg name="TOPIC_ARM_COMMAND" default="/cartesian_position_controller_sim/command_cart_pos"/>
+  <arg name="TOPIC_WRENCH_STATE" default="/wrench"/>
+
+
+  <param name="topic_arm_state" value="$(arg TOPIC_ARM_STATE)"/>
+  <param name="topic_arm_command" value="$(arg TOPIC_ARM_COMMAND)"/>
+  <param name="topic_wrench_state" value="$(arg TOPIC_WRENCH_STATE)"/>
+
+
+  <rosparam file="$(find rrt_control)/config/rrtParams.yaml" command="load"/>
 
   <node pkg="rrt_control" name="rrt_control_node" type="rrt_control_node" output="screen"/>
-  <node pkg="rosbag" type="record" name="bag_record" args="/Pose  -o $(find universal_robot_databag)/bag/3.bag"/>
+  <!-- <node pkg="rosbag" type="record" name="bag_record" args="/Pose  -o $(find universal_robot_databag)/bag/3.bag"/> -->
 </launch>

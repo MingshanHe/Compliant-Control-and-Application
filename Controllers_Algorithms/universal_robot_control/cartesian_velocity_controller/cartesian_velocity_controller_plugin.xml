@@ -1,0 +1,7 @@
+<library path="lib/libcartesian_velocity_controller">
+  <class name="cartesian_controller/CartesianVelocityController" type="cartesian_velocity_controller::Cartesian_Velocity_Controller" base_class_type="controller_interface::ControllerBase">
+    <description>
+        Cartesian velocity control
+    </description>
+  </class>
+</library>

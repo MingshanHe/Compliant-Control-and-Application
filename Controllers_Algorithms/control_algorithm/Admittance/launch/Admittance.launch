@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<launch>
+  <!--
+      Launch file for the admittance controller
+  -->
+  <!--for real robot, you can identify these topic and control it-->
+  <arg name="TOPIC_ARM_STATE" default="/cartesian_velocity_controller_sim/ee_state"/>
+  <arg name="TOPIC_ARM_COMMAND" default="/cartesian_velocity_controller_sim/command_cart_vel"/>
+  <arg name="TOPIC_WRENCH_STATE" default="/wrench"/>
+
+
+  <param name="topic_arm_state" value="$(arg TOPIC_ARM_STATE)"/>
+  <param name="topic_arm_command" value="$(arg TOPIC_ARM_COMMAND)"/>
+  <param name="topic_wrench_state" value="$(arg TOPIC_WRENCH_STATE)"/>
+
+
+  <rosparam file="$(find Admittance)/config/AdmittanceParams.yaml" command="load"/>
+
+  <node pkg="Admittance" name="Admittance" type="Admittance_node" output="screen"/>
+
+</launch>

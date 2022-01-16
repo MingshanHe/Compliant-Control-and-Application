@@ -66,9 +66,9 @@ void Admittance::wait_for_transformations() {
   tf::TransformListener listener;
   Matrix6d rot_matrix;
   // Makes sure all TFs exists before enabling all transformations in the callbacks
-  while (!get_rotation_matrix(rot_matrix, listener, "world", base_link_)) {sleep(1);}
+  // while (!get_rotation_matrix(rot_matrix, listener, "world", base_link_)) {sleep(1);}
   base_world_ready_ = true;
-  while (!get_rotation_matrix(rot_matrix, listener, base_link_, "world")) {sleep(1);}
+  // while (!get_rotation_matrix(rot_matrix, listener, base_link_, "world")) {sleep(1);}
   world_arm_ready_ = true;
   while (!get_rotation_matrix(rot_matrix, listener, base_link_, end_link_)) {sleep(1);}
   ft_arm_ready_ = true;
@@ -153,13 +153,30 @@ void Admittance::state_wrench_callback(
   Vector6d wrench_ft_frame;
   Matrix6d rotation_ft_base;
   if (ft_arm_ready_) {
-    wrench_ft_frame <<  msg->wrench.force.z, 
-                        msg->wrench.force.y,
-                        msg->wrench.force.x,
-                        msg->wrench.torque.z,
-                        msg->wrench.torque.y,
-                        msg->wrench.torque.x;
-
+    wrench_ft_frame <<  msg->wrench.force.x,msg->wrench.force.y,msg->wrench.force.z,0,0,0;
+    // wrench_ft_frame <<  msg->wrench.force.z,
+    //                     msg->wrench.force.y,
+    //                     msg->wrench.force.x,
+    //                     msg->wrench.torque.z,
+    //                     msg->wrench.torque.y,
+    //                     msg->wrench.torque.x;
+    float force_thres_lower_limit_ = 23;
+    float force_thres_upper_limit_ = 100;
+    if(fabs(wrench_ft_frame(0)) < force_thres_lower_limit_ || fabs(wrench_ft_frame(0)) > force_thres_upper_limit_){wrench_ft_frame(0) = 0;}
+    else{
+      if(wrench_ft_frame(0) > 0){wrench_ft_frame(0) -= force_thres_lower_limit_;}
+      else{wrench_ft_frame(0) += force_thres_lower_limit_;}
+    }
+    if(fabs(wrench_ft_frame(1)) < force_thres_lower_limit_ || fabs(wrench_ft_frame(1)) > force_thres_upper_limit_){wrench_ft_frame(1) = 0;}
+    else{
+      if(wrench_ft_frame(1) > 0){wrench_ft_frame(1) -= force_thres_lower_limit_;}
+      else{wrench_ft_frame(1) += force_thres_lower_limit_;}
+    }
+    if(fabs(wrench_ft_frame(2)) < force_thres_lower_limit_ || fabs(wrench_ft_frame(2)) > force_thres_upper_limit_){wrench_ft_frame(2) = 0;}
+    else{
+      if(wrench_ft_frame(2) > 0){wrench_ft_frame(2) -= force_thres_lower_limit_;}
+      else{wrench_ft_frame(2) += force_thres_lower_limit_;}
+    }
     get_rotation_matrix(rotation_ft_base, listener_ft_, base_link_, end_link_);
     wrench_external_ <<  rotation_ft_base * wrench_ft_frame;
   }
@@ -178,12 +195,12 @@ void Admittance::send_commands_to_robot() {
   // }
   geometry_msgs::Twist arm_twist_cmd;
 
-  arm_twist_cmd.linear.x  = arm_desired_twist_adm_(0);
-  arm_twist_cmd.linear.y  = arm_desired_twist_adm_(1);
-  arm_twist_cmd.linear.z  = arm_desired_twist_adm_(2);
-  arm_twist_cmd.angular.x = arm_desired_twist_adm_(3);
-  arm_twist_cmd.angular.y = arm_desired_twist_adm_(4);
-  arm_twist_cmd.angular.z = arm_desired_twist_adm_(5);
+  arm_twist_cmd.linear.x  = arm_desired_twist_adm_(0)*0.1;
+  arm_twist_cmd.linear.y  = arm_desired_twist_adm_(1)*0.1;
+  arm_twist_cmd.linear.z  = arm_desired_twist_adm_(2)*0.1;
+  arm_twist_cmd.angular.x = arm_desired_twist_adm_(3)*0.1;
+  arm_twist_cmd.angular.y = arm_desired_twist_adm_(4)*0.1;
+  arm_twist_cmd.angular.z = arm_desired_twist_adm_(5)*0.1;
   pub_arm_cmd_.publish(arm_twist_cmd);
 }
 

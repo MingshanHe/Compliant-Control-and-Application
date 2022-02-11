@@ -1,5 +1,0 @@
-cartesian_velocity_controller_sim:
-  type: cartesian_controller/CartesianVelocityControllerSim
-  publish_rate: 125
-  root_name: base_link
-  tip_name: ee_link

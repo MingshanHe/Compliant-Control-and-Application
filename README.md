@@ -1,0 +1,1 @@
+rospack plugins --attrib=plugin controller_interface

@@ -5,6 +5,11 @@
 ## Algorithm List
 
   **Notice**: In this repository, I have used ur5e robot and its `urdf` file need to be changed in different situation, like need or not a force/torque sensor in the end effector. Please check the `urdf` file seriously and run the algorithm, Thanks.
+### Pre.
+  After compiling the code successfully, please source the workspace before running the following commands.
+  ```bash
+  $ source devel/setup.bash
+  ```
 
 ### 1. Admittance
 

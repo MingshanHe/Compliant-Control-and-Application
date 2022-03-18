@@ -1,0 +1,12 @@
+root_name: "base_link"
+tip_name: "wrist_3_link"
+# [position (x, y, z)  orientation (x, y, z, w)]
+desired_pose:  [0.0,0.40,0.50,       0.00, 0.00, 0.707, 0.707]
+
+Ka: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+
+Kv: [1.5, 4.0, 4.0, 4.0, 4.0, 1.5]
+
+Kp: [42., 40., 40., 40., 42., 42.]
+
+publish_rate: 100

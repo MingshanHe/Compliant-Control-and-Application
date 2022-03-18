@@ -20,5 +20,7 @@
   <rosparam file="$(find hybrid_position_force_control)/config/AdmittanceParams.yaml" command="load"/>
 
   <node pkg="hybrid_position_force_control" name="hybrid_position_force_control" type="hybrid_position_force_control_node" output="screen"/>
+  <node pkg="rosbag" type="record" name="bag_record" args="/wrench /cartesian_velocity_controller_sim/ee_state /cartesian_velocity_controller_sim/command_cart_vel -o $(find universal_robot_databag)/bag/2.bag"/>
+
 
 </launch>

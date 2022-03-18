@@ -6,7 +6,7 @@
  * @Licence: MIT Licence
  */
 #include "ros/ros.h"
-#include "Admittance/Admittance.h"
+#include "admittance/Admittance.h"
 
 int main(int argc, char **argv)
 {

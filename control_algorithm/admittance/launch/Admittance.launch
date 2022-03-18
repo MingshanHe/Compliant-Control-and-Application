@@ -14,7 +14,7 @@
   <param name="topic_wrench_state" value="$(arg TOPIC_WRENCH_STATE)"/>
 
 
-  <rosparam file="$(find Admittance)/config/AdmittanceParams.yaml" command="load"/>
+  <rosparam file="$(find admittance)/config/AdmittanceParams.yaml" command="load"/>
 
   <node pkg="Admittance" name="Admittance" type="Admittance_node" output="screen"/>
 

@@ -1,0 +1,7 @@
+<library path="lib/libjoint_torque_controller">
+  <class name="joint_controller/JointTorqueController" type="joint_torque_controller::Joint_Torque_Controller" base_class_type="controller_interface::ControllerBase">
+    <description>
+      Joint torque control
+    </description>
+  </class>
+</library>

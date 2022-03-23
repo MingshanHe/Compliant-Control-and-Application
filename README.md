@@ -78,7 +78,7 @@ $ roslaunch hybrid_position_force_control hybrid_position_force_control.launch
 
 ### 1. Admittance
 
-![1](/home/robot/Downloads/Admittance-and-Application-simulation-devel/Image/Admittance.gif)
+![1](Image/Admittance.gif)
 
 ### 2. Hybrid Position Force Control
 

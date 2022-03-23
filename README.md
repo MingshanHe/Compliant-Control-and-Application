@@ -80,7 +80,10 @@ $ roslaunch hybrid_position_force_control hybrid_position_force_control.launch
 
 ![1](Image/Admittance.gif)
 
-### 2. Hybrid Position Force Control
+### 2. Hybrid Admittance Control
+![2](Image/Hybrid_Admittance.gif)
 
-![2](Image/Hybrid_Position_Force_Control.gif)
+### 3. Hybrid Position Force Control
+
+![3](Image/Hybrid_Position_Force_Control.gif)
 

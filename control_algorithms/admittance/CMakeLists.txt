@@ -127,11 +127,18 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 ## Declare a C++ library
 add_library(${PROJECT_NAME}
   include/${PROJECT_NAME}/Admittance.h
-  src/Admittance.cpp
+  src/Admittance/Admittance.cpp
 )
 target_link_libraries(  ${PROJECT_NAME}
   ${catkin_LIBRARIES}
+)
 
+add_library(hybridadmittance
+  include/hybridadmittance/HybridAdmittance.h
+  src/HybridAdmittance/HybridAdmittance.cpp
+)
+target_link_libraries(hybridadmittance
+  ${catkin_LIBRARIES}
 )
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -141,8 +148,9 @@ target_link_libraries(  ${PROJECT_NAME}
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(${PROJECT_NAME}_node src/Admittance_node.cpp)
-add_executable(wrench_signal_generate src/WrenchSignalGenerate.cpp)
+add_executable(${PROJECT_NAME}_node src/Admittance/Admittance_node.cpp)
+add_executable(hybridadmittance_node src/HybridAdmittance/HybridAdmittance_node.cpp)
+add_executable(wrench_signal_generate src/Admittance/WrenchSignalGenerate.cpp)
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -152,11 +160,16 @@ add_executable(wrench_signal_generate src/WrenchSignalGenerate.cpp)
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(hybridadmittance_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME}_node
   ${catkin_LIBRARIES}
   ${PROJECT_NAME}
+)
+target_link_libraries(hybridadmittance_node
+  ${catkin_LIBRARIES}
+  hybridadmittance
 )
 target_link_libraries(wrench_signal_generate
   ${catkin_LIBRARIES}

@@ -42,7 +42,17 @@ roslaunch ur_gazebo ur5e_bringup.launch transmission_hw_interface:=hardware_inte
 roslaunch impedance Impedance.launch
 ```
 
-### 3. Hybrid Position Force Control
+### 3. Application (Hybrid Admittance Control)
+
+```bash
+roslaunch mir_gazebo mir_single_test.launch tf_prefix:=robot1
+```
+
+```
+roslaunch admittance HybridAdmittance.launch tf_prefix:=robot1
+```
+
+### 4. Hybrid Position Force Control
 
 Rebuilding soon.......------......-----.... ^ . ^  
 

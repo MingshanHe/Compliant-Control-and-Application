@@ -1,0 +1,7 @@
+<library path="lib/libcartesian_position_controller">
+  <class name="cartesian_controller/CartesianPositionController" type="cartesian_position_controller::Cartesian_Position_Controller" base_class_type="controller_interface::ControllerBase">
+    <description>
+        Cartesian position control
+    </description>
+  </class>
+</library>

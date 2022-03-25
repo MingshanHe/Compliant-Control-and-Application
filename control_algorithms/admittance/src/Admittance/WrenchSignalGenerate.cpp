@@ -8,7 +8,7 @@
 #include <ros/ros.h>
 #include <geometry_msgs/WrenchStamped.h>
 
-#define WRENCH_TOPIC    "/wrench"
+#define WRENCH_TOPIC    "/wrench_fake"
 #define TOPIC_HZ        125.0
  
 int main(int argc, char ** argv)
@@ -29,11 +29,11 @@ int main(int argc, char ** argv)
         // wrench_msg.wrench.force.z = 5*sin(t);
         if(static_cast<int>(t)%10 < 5)
         {
-            wrench_msg.wrench.force.z = 3;
+            wrench_msg.wrench.force.z = 30;
         }
         else
         {
-            wrench_msg.wrench.force.z = -3;
+            wrench_msg.wrench.force.z = -30;
         }
         t += 1/TOPIC_HZ;
         wrench_pub.publish(wrench_msg);

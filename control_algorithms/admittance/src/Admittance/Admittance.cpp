@@ -194,13 +194,19 @@ void Admittance::send_commands_to_robot() {
 
   // }
   geometry_msgs::Twist arm_twist_cmd;
+  // arm_twist_cmd.linear.x  = arm_desired_twist_adm_(0)*0.1;
+  // arm_twist_cmd.linear.y  = arm_desired_twist_adm_(1)*0.1;
+  // arm_twist_cmd.linear.z  = arm_desired_twist_adm_(2)*0.1;
+  // arm_twist_cmd.angular.x = arm_desired_twist_adm_(3)*0.1;
+  // arm_twist_cmd.angular.y = arm_desired_twist_adm_(4)*0.1;
+  // arm_twist_cmd.angular.z = arm_desired_twist_adm_(5)*0.1;
 
-  arm_twist_cmd.linear.x  = arm_desired_twist_adm_(0)*0.1;
-  arm_twist_cmd.linear.y  = arm_desired_twist_adm_(1)*0.1;
-  arm_twist_cmd.linear.z  = arm_desired_twist_adm_(2)*0.1;
-  arm_twist_cmd.angular.x = arm_desired_twist_adm_(3)*0.1;
-  arm_twist_cmd.angular.y = arm_desired_twist_adm_(4)*0.1;
-  arm_twist_cmd.angular.z = arm_desired_twist_adm_(5)*0.1;
+  arm_twist_cmd.linear.x  = arm_desired_twist_adm_(0);
+  arm_twist_cmd.linear.y  = arm_desired_twist_adm_(1);
+  arm_twist_cmd.linear.z  = arm_desired_twist_adm_(2);
+  arm_twist_cmd.angular.x = arm_desired_twist_adm_(3);
+  arm_twist_cmd.angular.y = arm_desired_twist_adm_(4);
+  arm_twist_cmd.angular.z = arm_desired_twist_adm_(5);
   pub_arm_cmd_.publish(arm_twist_cmd);
 }
 

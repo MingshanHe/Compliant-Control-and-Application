@@ -11,6 +11,9 @@ void Impedance::init(ros::NodeHandle &nh,
         std::vector<double> Ka,
         std::vector<double> Kv,
         std::vector<double> Kp,
+        std::vector<double> M,
+        std::vector<double> D,
+        std::vector<double> K,
         std::vector<double> desired_pose)
 {
     //* Subscribers
@@ -38,9 +41,11 @@ void Impedance::init(ros::NodeHandle &nh,
     // KDL: Kinematics
     ik_vel_solver_.reset(new KDL::ChainIkSolverVel_pinv_givens(this->kdl_chain_));
     fk_pos_solver_.reset(new KDL::ChainFkSolverPos_recursive(this->kdl_chain_));
+    fk_vel_solver_.reset(new KDL::ChainFkSolverVel_recursive(this->kdl_chain_));
     // KDL::ChainIkSolverVel_pinv_givens ik_vel_solver_ = KDL::ChainIkSolverVel_pinv_givens(this->kdl_chain_);
     // KDL::ChainFkSolverPos_recursive fk_pos_solver_ = KDL::ChainFkSolverPos_recursive(this->kdl_chain_);
     ik_pos_solver_.reset(new KDL::ChainIkSolverPos_NR(this->kdl_chain_, *(fk_pos_solver_.get()), *(ik_vel_solver_.get())));
+    desired_pose_ = desired_pose;
     Desired_Pos_ = KDL::Vector(desired_pose[0], desired_pose[1], desired_pose[2]);
     Desired_Ori_ = KDL::Rotation::Quaternion(desired_pose[3], desired_pose[4], desired_pose[5],desired_pose[6]);
     Desired_Pose_ = KDL::Frame(Desired_Ori_, Desired_Pos_);
@@ -77,10 +82,17 @@ void Impedance::init(ros::NodeHandle &nh,
         Ka_(i) = Ka[i];
     }
 
+    Impedance_M = M;
+    Impedance_D = D;
+    Impedance_K = K;
+
     Recieved_Joint_State = false;
     Cmd_Flag_            = true;
     Init_Flag_           = true;
     Step_                = 0;
+
+    wrench_z             = 0;
+    pos_z                = 0;
 }
 void Impedance::state_arm_callback(const joint_state_msg::JointState msg)
 {
@@ -101,6 +113,8 @@ void Impedance::state_wrench_callback(
   const geometry_msgs::WrenchStampedConstPtr msg) {
     KDL::Wrench wrench = KDL::Wrench(KDL::Vector(0,0,0),KDL::Vector(0,0,0));
     Ext_Wrenches.back() = wrench;
+
+    wrench_z = msg->wrench.force.z;
 }
 
 void Impedance::compute_impedance(bool flag)
@@ -113,6 +127,30 @@ void Impedance::compute_impedance(bool flag)
             Jnt_Pos_Init_State = Jnt_Pos_State;
             Init_Flag_ = false;
         }
+
+        if (wrench_z != 0)
+        {
+            KDL::Frame End_Pose;
+            fk_pos_solver_->JntToCart(Jnt_Pos_State,End_Pose);
+
+            KDL::JntArrayVel Jnt_Vel;
+            KDL::FrameVel End_Pose_Vel;
+            Jnt_Vel = KDL::JntArrayVel(Jnt_Pos_State, Jnt_Vel_State);
+            fk_vel_solver_->JntToCart(Jnt_Vel, End_Pose_Vel);
+
+            KDL::Vector pose_p, pose_vel_p;
+            pose_p = End_Pose.p;
+            pose_vel_p = End_Pose_Vel.p.p;
+
+            double acc_z = (wrench_z - (Impedance_D[2]*pose_vel_p(2) + Impedance_K[2]*(pose_p(2)-desired_pose_[2])))/Impedance_M[2];
+            ros::Rate loop_rate_(200);
+            ros::Duration duration = loop_rate_.expectedCycleTime();
+            pos_z = pos_z + 0.01*(pose_vel_p(2) * duration.toSec() + 0.5 * acc_z * duration.toSec() * duration.toSec());
+            Desired_Pos_ = KDL::Vector(desired_pose_[0], desired_pose_[1], desired_pose_[2]+pos_z);
+            Desired_Ori_ = KDL::Rotation::Quaternion(desired_pose_[3], desired_pose_[4], desired_pose_[5],desired_pose_[6]);
+            Desired_Pose_ = KDL::Frame(Desired_Ori_, Desired_Pos_);
+        }
+
         ik_pos_solver_->CartToJnt(Jnt_Pos_State, Desired_Pose_, CMD_State);
 
         // reaching desired joint position using a hyperbolic tangent function
@@ -214,7 +252,7 @@ void Impedance::send_commands_to_robot() {
 void Impedance::run()
 {
     ROS_INFO("Running the impedance control loop .................");
-    ros::Rate loop_rate_(125);
+    ros::Rate loop_rate_(200);
     while (nh_.ok()) {
 
         compute_impedance(Recieved_Joint_State);

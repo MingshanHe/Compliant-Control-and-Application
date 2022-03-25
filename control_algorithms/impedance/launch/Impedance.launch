@@ -6,7 +6,7 @@
 
   <arg name="TOPIC_ARM_STATE" default="/joint_torque_controller/joint_state"/>
   <arg name="TOPIC_ARM_COMMAND" default="/joint_torque_controller/command_joint_torque"/>
-  <arg name="TOPIC_WRENCH_STATE" default="/wrench"/>
+  <arg name="TOPIC_WRENCH_STATE" default="/wrench_fake"/>
 
 
   <param name="topic_arm_state" value="$(arg TOPIC_ARM_STATE)"/>

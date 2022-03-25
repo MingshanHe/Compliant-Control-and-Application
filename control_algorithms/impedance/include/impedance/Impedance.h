@@ -27,6 +27,7 @@
 #include "geometry_msgs/WrenchStamped.h"
 #include "std_msgs/Float64MultiArray.h"
 
+typedef Matrix<double, 6, 6> Matrix6d;
 class Impedance: public kdl_base::KDL_Base
 {
 public:
@@ -40,6 +41,9 @@ public:
         std::vector<double> Ka,
         std::vector<double> Kv,
         std::vector<double> Kp,
+        std::vector<double> M,
+        std::vector<double> D,
+        std::vector<double> K,
         std::vector<double> desired_pose);
 
     void run();
@@ -101,6 +105,7 @@ protected:
 
     //  Kinematics
     boost::shared_ptr<KDL::ChainFkSolverPos>    fk_pos_solver_;
+    boost::shared_ptr<KDL::ChainFkSolverVel>    fk_vel_solver_;
     boost::shared_ptr<KDL::ChainIkSolverVel>    ik_vel_solver_;
     boost::shared_ptr<KDL::ChainIkSolverPos_NR> ik_pos_solver_;
 
@@ -108,6 +113,11 @@ protected:
     boost::shared_ptr<KDL::ChainIdSolver>       id_pos_solver_;
     boost::shared_ptr<KDL::ChainDynParam>       id_solver_;
 
+    std::vector<double>     Impedance_M, Impedance_D, Impedance_K;
+    std::vector<double>     desired_pose_;
+
+    double                  wrench_z;
+    double                  pos_z;
 };
 
 

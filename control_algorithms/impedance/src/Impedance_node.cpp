@@ -18,7 +18,9 @@ int main(int argc, char **argv)
     std::vector<double> desired_pose;
     std::vector<double> Ka, Kv, Kp;
 
-
+    std::vector<double> M;
+    std::vector<double> D;
+    std::vector<double> K;
 
     // LOADING PARAMETERS FROM THE ROS SERVER 
 
@@ -31,6 +33,10 @@ int main(int argc, char **argv)
     if (!nh.getParam("Kv", Kv)) { ROS_ERROR("Couldn't retrieve the Kv."); return -1; }
     if (!nh.getParam("Kp", Kp)) { ROS_ERROR("Couldn't retrieve the Kp."); return -1; }
 
+    if (!nh.getParam("mass_arm", M)) { ROS_ERROR("Couldn't retrieve the desired mass of the arm."); return -1; }
+    if (!nh.getParam("damping_arm", D)) { ROS_ERROR("Couldn't retrieve the desired damping of the coupling."); return -1; }
+    if (!nh.getParam("stiffness_coupling", K)) { ROS_ERROR("Couldn't retrieve the desired stiffness of the coupling."); return -1; }
+
     if (!nh.getParam("desired_pose", desired_pose)) { ROS_ERROR("Couldn't retrieve the desired_pose."); return -1; }
 
     Impedance impedance;
@@ -41,6 +47,7 @@ int main(int argc, char **argv)
         topic_arm_command,
         topic_wrench_state,
         Ka, Kv, Kp,
+        M, D, K,
         desired_pose);
 
     impedance.run();

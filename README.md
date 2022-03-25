@@ -29,7 +29,13 @@ roslaunch ur_gazebo ur5e_bringup.launch transmission_hw_interface:=hardware_inte
 ```
 
 ```bash
-roslaunch admittance Admittance_test.lanch
+roslaunch admittance Admittance.launch
+```
+
+After the robot has moved to the desired pose, run the following commands to generate fake wrench signal
+
+```bash
+roslaunch admittance Wrench_Fake.launch
 ```
 
 ### 2. Impedance
@@ -54,25 +60,21 @@ roslaunch admittance HybridAdmittance.launch tf_prefix:=robot1
 
 ### 4. Hybrid Position Force Control
 
-Rebuilding soon.......------......-----.... ^ . ^  
-
-​	In industrial polishing, coating painting, and so forth, the robotic arm needs to be controlled to move along the surface with pressure. The constant pressure provides a vertical force along the surface and won't be changed during moving. Because of it, the end effector and contact surface exist friction which causes the polishing and painting.
-
-  In this control algorithms, I have used a car wheel to imitate a curve surface that needs to be processed. This control algorithm contains position servo and forces closed-loop control as its name.
-
-  First of all, running the gazebo environment which contains a universal robot and a car wheel beside it.
-
 ```bash
-$ roslaunch ur_e_gazebo ur5e.launch controller:=cartesian_velocity_controller_sim environment:=polish
+roslaunch ur_gazebo ur5e_bringup.launch transmission_hw_interface:=hardware_interface/PositionJointInterface specified_controller:=cartesian_velocity_controller environment:=polish
 ```
 
-  Then, running the hybrid position force control
-
 ```bash
-$ roslaunch hybrid_position_force_control hybrid_position_force_control.launch
+roslaunch hybrid_position_force_control hybrid_position_force_control.launch
 ```
 
-  And then it needs to use the topic publish command in the terminal. It is recommended to move to $[0.1,0.4,0.45]$ which along the **x** Axis at first, and then move to $[0.1,0.4,0.3]$ in **z** Axis. This makes the end contact with the curve surface and has a little slope angle. According to the force close-loop algorithm, the end effector will change its orientation to adapt it. At last, you command it to move to $[-0,1,0.4,0.3]$ along the **x** Axis which is simulated in the polish experiment. And the performance is shown in the following Gif file.
+  And then it needs to use the topic publish command in the terminal. It is recommended to move to the pose [-0.1, 0.3, 0.3, 0.707, -0.707, 0.0, 0.0]. 
+
+```bash
+rostopic pub /desired_carteisan_pose_cmd geometry_msgs/Pose "position: x: -0.10 y: 0.30 z: 0.30 orientation: x: 0.707 y: -0.707 z: 0.0 w: 0.0" 
+```
+
+
 
 ## Performance
 

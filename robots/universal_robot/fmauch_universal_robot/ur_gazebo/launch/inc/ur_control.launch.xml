@@ -23,7 +23,7 @@
 
   <!-- Gazebo parameters -->
   <arg name="gazebo_model_name" default="robot" doc="The name to give to the model in Gazebo (after spawning it)." />
-  <arg name="gazebo_world" default="worlds/empty.world" doc="The '.world' file to load in Gazebo." />
+  <arg name="gazebo_world" default="$(find ur_gazebo)/worlds/empty.world" doc="The '.world' file to load in Gazebo." />
   <arg name="gui" default="true" doc="If true, Gazebo UI is started. If false, only start Gazebo server." />
   <arg name="paused" default="false" doc="If true, start Gazebo in paused mode. If false, start simulation as soon as Gazebo has loaded." />
   <arg name="robot_description_param_name" default="robot_description" doc="Name of the parameter which contains the robot description (ie: URDF) which should be spawned into Gazebo." />

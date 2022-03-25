@@ -38,6 +38,8 @@
   <arg name="visual_params" default="$(find ur_description)/config/ur5e/visual_parameters.yaml"/>
   <!-- 1. PositionJointInterface 2. EffortJointInterface -->
   <arg name="transmission_hw_interface" default="hardware_interface/EffortJointInterface"/>
+  <arg name="environment" default="empty" doc="Specify the virtual environment"/>
+  <arg name="gazebo_world" default="$(find ur_gazebo)/worlds/$(arg environment).world"/>
 
   <!-- Controller configuration -->
   <arg name="controller_config_file" default="$(find ur_gazebo)/config/ur5e_controllers.yaml" doc="Config file used for defining the ROS-Control controllers."/>
@@ -75,5 +77,6 @@
     <arg name="controllers" value="$(arg controllers) $(arg specified_controller)"/>
     <arg name="gui" value="$(arg gui)"/>
     <arg name="paused" value="$(arg paused)"/>
+    <arg name="gazebo_world" value="$(arg gazebo_world)"/>
   </include>
 </launch>

@@ -39,7 +39,7 @@ cartesian_velocity_controller:
 
 joint_torque_controller:
   type: joint_controller/JointTorqueController
-  publish_rate: 125
+  publish_rate: 200
   root_name: base_link
   tip_name: wrist_3_link
   joints:

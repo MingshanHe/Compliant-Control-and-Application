@@ -301,6 +301,9 @@
          <safety_controller soft_lower_limit="${wrist_3_lower_limit + safety_pos_margin}" soft_upper_limit="${wrist_3_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
       </xacro:if>
       <dynamics damping="0" friction="0"/>
+      <sensor name="force_torque" type="force_torque">
+        <update_rate>30</update_rate>
+      </sensor>
     </joint>
 
     <!-- ROS-Industrial 'base' frame: base_link to UR 'Base' Coordinates transform -->

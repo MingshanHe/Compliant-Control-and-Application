@@ -87,11 +87,13 @@
     </gazebo>
     <gazebo reference="${prefix}wrist_3_link">
       <selfCollide>true</selfCollide>
+      <provideFeedback>true</provideFeedback>
     </gazebo>
     <gazebo reference="${prefix}wrist_2_link">
       <selfCollide>true</selfCollide>
     </gazebo>
     <gazebo reference="${prefix}ee_link">
+      <provideFeedback>true</provideFeedback>
       <selfCollide>true</selfCollide>
     </gazebo>
 
@@ -103,6 +105,22 @@
       <plugin name="ros_control" filename="libgazebo_ros_control.so">
         <!--robotNamespace>/</robotNamespace-->
         <!--robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType-->
+      </plugin>
+    </gazebo>
+
+    <gazebo reference="wrist_3_joint">
+      <provideFeedback>true</provideFeedback>
+    </gazebo>
+    <gazebo>
+      <plugin name="wrench" filename="libgazebo_ros_ft_sensor.so">
+        <updateRate>125.0</updateRate>
+        <topicName>wrench</topicName>
+        <jointName>wrist_3_joint</jointName>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.003</stddev>
+        </noise>
       </plugin>
     </gazebo>
   </xacro:macro>

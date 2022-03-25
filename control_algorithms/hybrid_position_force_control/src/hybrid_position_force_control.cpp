@@ -180,12 +180,12 @@ void hybrid_position_force_control::state_wrench_callback(
   Vector6d wrench_ft_frame;
   Matrix6d rotation_ft_base;
   if (ft_arm_ready_) {
-    wrench_ft_frame <<  msg->wrench.force.y, 
-                        msg->wrench.force.x,
-                        msg->wrench.force.z,
-                        msg->wrench.torque.y,
-                        -msg->wrench.torque.x,
-                        msg->wrench.torque.z;
+    wrench_ft_frame <<  0.0,
+                        0.0,
+                        0.0,
+                        -msg->wrench.torque.y,
+                        0.0,
+                        0.0;
     for (std::size_t i = 0; i < 3; i++) {
       if (abs(wrench_ft_frame(i)) < force_deadzone_thres_) {
         wrench_ft_frame(i) = 0;

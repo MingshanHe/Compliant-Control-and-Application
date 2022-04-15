@@ -1,5 +1,0 @@
-# Service to load programs or installations
-string filename
----
-string answer
-bool success

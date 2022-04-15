@@ -132,7 +132,7 @@ void Admittance::compute_admittance() {
 void Admittance::state_arm_callback(
   const cartesian_state_msgs::PoseTwistConstPtr msg) {
   arm_position_ <<  msg->pose.position.x,
-                    msg->pose.position.y, 
+                    msg->pose.position.y,
                     msg->pose.position.z;
 
   arm_orientation_.coeffs() <<  msg->pose.orientation.x,
@@ -140,7 +140,7 @@ void Admittance::state_arm_callback(
                                 msg->pose.orientation.z,
                                 msg->pose.orientation.w;
 
-  arm_twist_ << msg->twist.linear.x, 
+  arm_twist_ << msg->twist.linear.x,
                 msg->twist.linear.y,
                 msg->twist.linear.z,
                 msg->twist.angular.x,

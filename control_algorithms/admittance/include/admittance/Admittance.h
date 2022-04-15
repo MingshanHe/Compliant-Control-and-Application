@@ -109,7 +109,10 @@ private:
   // Callbacks
   void state_arm_callback(const cartesian_state_msgs::PoseTwistConstPtr msg);
   void state_wrench_callback(const geometry_msgs::WrenchStampedConstPtr msg);
+  // 
   void send_commands_to_robot();
+
+  // 
   void wait_for_transformations();
   bool get_rotation_matrix(Matrix6d & rotation_matrix,
                            tf::TransformListener & listener,

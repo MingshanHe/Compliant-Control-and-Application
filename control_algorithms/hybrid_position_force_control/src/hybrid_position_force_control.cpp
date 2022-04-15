@@ -202,7 +202,7 @@ void hybrid_position_force_control::state_wrench_callback(
 void  hybrid_position_force_control::cart_pose_cmd_callback(
   const geometry_msgs::Pose  msg) {
   cmd_pose_position_ << msg.position.x,
-                        msg.position.y, 
+                        msg.position.y,
                         msg.position.z;
 
   cmd_pose_orientation_.coeffs() <<   msg.orientation.x,

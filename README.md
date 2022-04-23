@@ -54,7 +54,7 @@ roslaunch impedance Impedance.launch
 ### 3. Application (Hybrid Admittance Control)
 
 ```bash
-roslaunch mir_gazebo mir_single_test.launch tf_prefix:=robot1
+roslaunch mir_gazebo mir_ur5e.launch tf_prefix:=robot1
 ```
 
 ```
@@ -77,6 +77,16 @@ roslaunch hybrid_position_force_control hybrid_position_force_control.launch
 rostopic pub /desired_carteisan_pose_cmd geometry_msgs/Pose "position: x: -0.10 y: 0.30 z: 0.30 orientation: x: 0.707 y: -0.707 z: 0.0 w: 0.0" 
 ```
 
+### 5. Mobile Robot
+```bash
+roslaunch mir_gazebo mir.launch tf_prefix:=robot1
+```
+There are some pre-settings that will be needed to run in this project. Three mode is provided to be tested.
+1) Mobile Robot(mir robot)
+2) Mobile Robot(mir robot) with a Robotic Arm(UR5E)
+3) Mobile Robot(mir robot) with a Robotic Arm(UR5E) and a Gripper(Robotiq)
+
+For change amoung them, this project have provided the setting params in the `mir.launch` file. And you also need to change the start controller for the robotic arm in `mir_gazebo_common.launch`
 
 
 ## Performance

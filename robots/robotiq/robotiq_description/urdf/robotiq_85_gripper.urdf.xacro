@@ -1,0 +1,279 @@
+<?xml version="1.0"?>
+
+<robot name="robotiq_85_gripper" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find robotiq_description)/urdf/robotiq_85_gripper.transmission.xacro" />
+  
+  <xacro:macro name="robotiq_85_gripper" params="prefix parent *origin">
+
+    <joint name="${prefix}robotiq_85_base_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="${prefix}robotiq_85_base_link"/>
+      <xacro:insert_block name="origin"/>
+    </joint>
+
+    <link name="${prefix}robotiq_85_base_link">
+      <visual>
+        <geometry>
+          <mesh filename="package://robotiq_description/meshes/visual/robotiq_85_base_link.dae"/>
+        </geometry>
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://robotiq_description/meshes/collision/robotiq_85_base_link.stl"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="0.636951" />
+        <origin xyz="0.0 0.0 0.0" />
+        <inertia ixx = "0.000380" ixy = "0.000000" ixz = "0.000000"
+             iyx = "0.000000" iyy = "0.001110" iyz = "0.000000"
+             izx = "0.000000" izy = "0.000000" izz = "0.001171" />
+      </inertial>
+    </link>
+
+    <joint name="${prefix}robotiq_85_left_knuckle_joint" type="revolute">
+      <parent link="${prefix}robotiq_85_base_link"/>
+      <child link="${prefix}robotiq_85_left_knuckle_link"/>
+      <axis xyz="0 0 1"/>
+      <origin rpy="${pi} 0.0 0.0" xyz="0.05490451627 0.03060114443 0.0"/>
+      <limit lower="0.0" upper="0.80285" velocity="0.5" effort="1000"/>
+    </joint>
+
+    <joint name="${prefix}robotiq_85_right_knuckle_joint" type="continuous">
+      <parent link="${prefix}robotiq_85_base_link"/>
+      <child link="${prefix}robotiq_85_right_knuckle_link"/>
+      <axis xyz="0 0 1"/>
+      <origin rpy="0.0 0.0 0.0" xyz="0.05490451627 -0.03060114443 0.0"/>
+      <limit lower="-3.14" upper="3.14" velocity="100.0" effort="1000"/>
+      <mimic joint="${prefix}robotiq_85_left_knuckle_joint"/>
+    </joint>
+
+    <link name="${prefix}robotiq_85_left_knuckle_link">
+      <visual>
+        <geometry>
+          <mesh filename="package://robotiq_description/meshes/visual/robotiq_85_knuckle_link.dae"/>
+        </geometry>
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://robotiq_description/meshes/collision/robotiq_85_knuckle_link.stl"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="0.018491" />
+        <origin xyz="0.0 0.0 0.0" />
+        <inertia ixx = "0.000009" ixy = "-0.000001" ixz = "0.000000"
+             iyx = "-0.000001" iyy = "0.000001" iyz = "0.000000"
+             izx = "0.000000" izy = "0.000000" izz = "0.000010" />
+      </inertial>
+    </link> 
+
+    <link name="${prefix}robotiq_85_right_knuckle_link">
+      <visual>
+        <geometry>
+          <mesh filename="package://robotiq_description/meshes/visual/robotiq_85_knuckle_link.dae"/>
+        </geometry>
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://robotiq_description/meshes/collision/robotiq_85_knuckle_link.stl"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="0.018491" />
+        <origin xyz="0.0 0.0 0.0" />
+        <inertia ixx = "0.000009" ixy = "-0.000001" ixz = "0.000000"
+             iyx = "-0.000001" iyy = "0.000001" iyz = "0.000000"
+             izx = "0.000000" izy = "0.000000" izz = "0.000010" />
+      </inertial>
+    </link>
+
+    <joint name="${prefix}robotiq_85_left_finger_joint" type="fixed">
+      <parent link="${prefix}robotiq_85_left_knuckle_link"/>
+      <child link="${prefix}robotiq_85_left_finger_link"/>
+      <origin xyz="-0.00408552455 -0.03148604435 0.0" rpy="0 0 0" />
+    </joint>
+
+    <joint name="${prefix}robotiq_85_right_finger_joint" type="fixed">
+      <parent link="${prefix}robotiq_85_right_knuckle_link"/>
+      <child link="${prefix}robotiq_85_right_finger_link"/>
+      <origin xyz="-0.00408552455 -0.03148604435 0.0" rpy="0 0 0" />
+    </joint>
+
+    <link name="${prefix}robotiq_85_left_finger_link">
+      <visual>
+        <geometry>
+          <mesh filename="package://robotiq_description/meshes/visual/robotiq_85_finger_link.dae"/>
+        </geometry>
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://robotiq_description/meshes/collision/robotiq_85_finger_link.stl"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="0.027309" />
+        <origin xyz="0.0 0.0 0.0" />
+        <inertia ixx = "0.000003" ixy = "-0.000002" ixz = "0.000000"
+             iyx = "-0.000002" iyy = "0.000021" iyz = "0.000000"
+             izx = "0.000000" izy = "0.000000" izz = "0.000020" />
+      </inertial>
+    </link> 
+
+    <link name="${prefix}robotiq_85_right_finger_link">
+      <visual>
+        <geometry>
+          <mesh filename="package://robotiq_description/meshes/visual/robotiq_85_finger_link.dae"/>
+        </geometry>
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://robotiq_description/meshes/collision/robotiq_85_finger_link.stl"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="0.027309" />
+        <origin xyz="0.0 0.0 0.0" />
+        <inertia ixx = "0.000003" ixy = "-0.000002" ixz = "0.000000"
+             iyx = "-0.000002" iyy = "0.000021" iyz = "0.000000"
+             izx = "0.000000" izy = "0.000000" izz = "0.000020" />
+      </inertial>
+    </link> 
+
+    <joint name="${prefix}robotiq_85_left_inner_knuckle_joint" type="continuous">
+      <parent link="${prefix}robotiq_85_base_link"/>
+      <child link="${prefix}robotiq_85_left_inner_knuckle_link"/>
+      <axis xyz="0 0 1"/>
+      <origin xyz="0.06142 0.0127 0" rpy="${pi} 0.0 0.0" />
+      <limit lower="-3.14" upper="3.14" velocity="100.0" effort="0.1"/>
+      <mimic joint="${prefix}robotiq_85_left_knuckle_joint" offset="0"/>
+    </joint>
+
+    <joint name="${prefix}robotiq_85_right_inner_knuckle_joint" type="continuous">
+      <parent link="${prefix}robotiq_85_base_link"/>
+      <child link="${prefix}robotiq_85_right_inner_knuckle_link"/>
+      <axis xyz="0 0 1"/>
+      <origin xyz="0.06142 -0.0127 0" rpy="0 0 0"/>
+      <limit lower="-3.14" upper="3.14" velocity="100.0" effort="0.1"/>
+      <mimic joint="${prefix}robotiq_85_left_knuckle_joint" offset="0"/>
+    </joint>
+
+    <link name="${prefix}robotiq_85_left_inner_knuckle_link">
+      <visual>
+        <geometry>
+          <mesh filename="package://robotiq_description/meshes/visual/robotiq_85_inner_knuckle_link.dae"/>
+        </geometry>
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://robotiq_description/meshes/collision/robotiq_85_inner_knuckle_link.stl"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="0.029951" />
+        <origin xyz="0.0 0.0 0.0" />
+        <inertia ixx = "0.000039" ixy = "0.000000" ixz = "0.000000"
+             iyx = "0.000000" iyy = "0.000005" iyz = "0.000000"
+             izx = "0.000000" izy = "0.000000" izz = "0.000035" />
+      </inertial>
+    </link>
+    <link name="${prefix}robotiq_85_right_inner_knuckle_link">
+      <visual>
+        <geometry>
+          <mesh filename="package://robotiq_description/meshes/visual/robotiq_85_inner_knuckle_link.dae"/>
+        </geometry>
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://robotiq_description/meshes/collision/robotiq_85_inner_knuckle_link.stl"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="0.029951" />
+        <origin xyz="0.0 0.0 0.0" />
+        <inertia ixx = "0.000039" ixy = "0.000000" ixz = "0.000000"
+             iyx = "0.000000" iyy = "0.000005" iyz = "0.000000"
+             izx = "0.000000" izy = "0.000000" izz = "0.000035" />
+      </inertial>
+    </link>
+
+    <joint name="${prefix}robotiq_85_left_finger_tip_joint" type="continuous">
+      <parent link="${prefix}robotiq_85_left_inner_knuckle_link"/>
+      <child link="${prefix}robotiq_85_left_finger_tip_link"/>
+      <axis xyz="0 0 1"/>
+      <origin xyz="0.04303959807 -0.03759940821 0.0" rpy="0.0 0.0 0.0"/>
+      <limit lower="-3.14" upper="3.14" velocity="100.0" effort="0.1"/>
+      <mimic joint="${prefix}robotiq_85_left_knuckle_joint" multiplier="-1"/>
+    </joint>
+
+    <joint name="${prefix}robotiq_85_right_finger_tip_joint" type="continuous">
+      <parent link="${prefix}robotiq_85_right_inner_knuckle_link"/>
+      <child link="${prefix}robotiq_85_right_finger_tip_link"/>
+      <axis xyz="0 0 1"/>
+      <origin rpy="0.0 0.0 0.0" xyz="0.04303959807 -0.03759940821  0.0"/>
+      <limit lower="-3.14" upper="3.14" velocity="100.0" effort="0.1"/>
+      <mimic joint="${prefix}robotiq_85_left_knuckle_joint" multiplier="-1"/>
+    </joint>
+
+
+    <link name="${prefix}robotiq_85_left_finger_tip_link">
+      <visual>
+        <geometry>
+          <mesh filename="package://robotiq_description/meshes/visual/robotiq_85_finger_tip_link.dae"/>
+        </geometry>
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://robotiq_description/meshes/collision/robotiq_85_finger_tip_link.stl"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="0.019555" />
+        <origin xyz="0.0 0.0 0.0" />
+        <inertia ixx = "0.000002" ixy = "0.000000" ixz = "0.000000"
+             iyx = "0.000000" iyy = "0.000005" iyz = "0.000000"
+             izx = "0.000000" izy = "0.000000" izz = "0.000006" />
+      </inertial>
+    </link> 
+
+    <link name="${prefix}robotiq_85_right_finger_tip_link">
+      <visual>
+        <geometry>
+          <mesh filename="package://robotiq_description/meshes/visual/robotiq_85_finger_tip_link.dae"/>
+        </geometry>
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://robotiq_description/meshes/collision/robotiq_85_finger_tip_link.stl"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="0.019555" />
+        <origin xyz="0.0 0.0 0.0" />
+        <inertia ixx = "0.000002" ixy = "0.000000" ixz = "0.000000"
+             iyx = "0.000000" iyy = "0.000005" iyz = "0.000000"
+             izx = "0.000000" izy = "0.000000" izz = "0.000006" />
+      </inertial>
+    </link>
+    
+    <!-- Improve grasping physics -->
+    <gazebo reference="${prefix}robotiq_85_left_finger_tip_link">
+      <kp>10000000.0</kp>
+      <kd>1.0</kd>
+      <mu1>2500.0</mu1>
+      <mu2>1500.0</mu2>
+      <minDepth>0.001</minDepth>
+    </gazebo>
+    <gazebo reference="${prefix}robotiq_85_right_finger_tip_link">
+      <kp>10000000.0</kp>
+      <kd>1.0</kd>
+      <mu1>2500.0</mu1>
+      <mu2>1500.0</mu2>
+      <minDepth>0.001</minDepth>
+    </gazebo>
+    
+    <xacro:robotiq_85_gripper_transmission prefix="${prefix}" />
+
+  </xacro:macro>
+</robot>

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<package format="2">
+
+  <name>robotiq_description</name>
+
+  <version>0.1.0</version>
+  <description>
+    The robotiq_description package. It has been adapted from:
+    https://github.com/StanleyInnovation/robotiq_85_gripper
+  </description>
+
+  <maintainer email="oramos@utec.edu.pe">oramos</maintainer>
+  <license>BSD</license>
+  <author email="oramos@utec.edu.pe">oramos</author>
+
+  <depend>rospy</depend>
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>urdf</exec_depend>
+  <exec_depend>xacro</exec_depend>
+
+</package>

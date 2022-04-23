@@ -110,11 +110,13 @@ void Impedance::state_arm_callback(const joint_state_msg::JointState msg)
 }
 
 void Impedance::state_wrench_callback(
-  const geometry_msgs::WrenchStampedConstPtr msg) {
+  const geometry_msgs::WrenchConstPtr msg) {
     KDL::Wrench wrench = KDL::Wrench(KDL::Vector(0,0,0),KDL::Vector(0,0,0));
     Ext_Wrenches.back() = wrench;
 
-    wrench_z = msg->wrench.force.z;
+    wrench_x = msg->force.x;
+    wrench_y = msg->force.y;
+    wrench_z = msg->force.z;
 }
 
 void Impedance::compute_impedance(bool flag)
@@ -142,11 +144,16 @@ void Impedance::compute_impedance(bool flag)
             pose_p = End_Pose.p;
             pose_vel_p = End_Pose_Vel.p.p;
 
-            double acc_z = (wrench_z - (Impedance_D[2]*pose_vel_p(2) + Impedance_K[2]*(pose_p(2)-desired_pose_[2])))/Impedance_M[2];
+            // double acc_x = (wrench_x - (Impedance_D[0]*pose_vel_p(0) + Impedance_K[0]*(pose_p(0)-desired_pose_[0])))/Impedance_M[0];
+            // double acc_y = (wrench_y - (Impedance_D[1]*pose_vel_p(1) + Impedance_K[1]*(pose_p(1)-desired_pose_[1])))/Impedance_M[1];
+            double acc_z = (wrench_z - (Impedance_D[2]*pose_vel_p(2) + Impedance_K[2]*(desired_pose_[2]-pose_p(2))))/Impedance_M[2];
+
             ros::Rate loop_rate_(200);
             ros::Duration duration = loop_rate_.expectedCycleTime();
-            pos_z = pos_z + 0.01*(pose_vel_p(2) * duration.toSec() + 0.5 * acc_z * duration.toSec() * duration.toSec());
-            Desired_Pos_ = KDL::Vector(desired_pose_[0], desired_pose_[1], desired_pose_[2]+pos_z);
+            // pos_x = pos_x + 0.01*(pose_vel_p(0) * duration.toSec() + 0.5 * acc_x * duration.toSec() * duration.toSec());
+            // pos_y = pos_y + 0.01*(pose_vel_p(1) * duration.toSec() + 0.5 * acc_y * duration.toSec() * duration.toSec());
+            pos_z = 10*(pose_vel_p(2) * duration.toSec() + 0.5 * acc_z * duration.toSec() * duration.toSec());
+            Desired_Pos_ = KDL::Vector(desired_pose_[0]+pos_x, desired_pose_[1]+pos_y, desired_pose_[2]+pos_z);
             Desired_Ori_ = KDL::Rotation::Quaternion(desired_pose_[3], desired_pose_[4], desired_pose_[5],desired_pose_[6]);
             Desired_Pose_ = KDL::Frame(Desired_Ori_, Desired_Pos_);
         }

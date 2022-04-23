@@ -24,7 +24,7 @@
 #include "joint_effort_msg/JointEffort.h"
 #include "joint_effort_msg/JointEfforts.h"
 #include "joint_state_msg/JointState.h"
-#include "geometry_msgs/WrenchStamped.h"
+#include "geometry_msgs/Wrench.h"
 #include "std_msgs/Float64MultiArray.h"
 
 typedef Matrix<double, 6, 6> Matrix6d;
@@ -55,7 +55,7 @@ private:
 private:
     void state_arm_callback(const joint_state_msg::JointState msg);
 
-    void state_wrench_callback(const geometry_msgs::WrenchStampedConstPtr msg);
+    void state_wrench_callback(const geometry_msgs::WrenchConstPtr msg);
 
     void command(const std_msgs::Float64MultiArray::ConstPtr &msg);
 
@@ -116,7 +116,11 @@ protected:
     std::vector<double>     Impedance_M, Impedance_D, Impedance_K;
     std::vector<double>     desired_pose_;
 
+    double                  wrench_x;
+    double                  wrench_y;
     double                  wrench_z;
+    double                  pos_x;
+    double                  pos_y;
     double                  pos_z;
 };
 

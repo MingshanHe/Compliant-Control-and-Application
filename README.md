@@ -9,7 +9,10 @@ mkdir catkin_ws/src && cd catkin_ws/src
 git clone https://github.com/MingshanHe/Compliant-Control-and-Application.git
 catkin build (or cd .. && catkin_make)
 ```
-
+If there is come up with some errors during compile process, you might need to install some ros packages for support this project, I recommend you to run following command or search the compile error in Google or Baidu and so on.
+```bash
+rosdep install -i --from-path src --rosdistro noetic --ignore-src -r -y
+```
 ## Check
 
 using the following command to check the self-defined controller. Like:`cartesian_velocity_controller`

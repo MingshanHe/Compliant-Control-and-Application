@@ -120,3 +120,5 @@ rviz -d $(rospack find mir_navigation)/rviz/navigation.rviz
 
 ![3](Image/Hybrid_Position_Force_Control.gif)
 
+
+#git test

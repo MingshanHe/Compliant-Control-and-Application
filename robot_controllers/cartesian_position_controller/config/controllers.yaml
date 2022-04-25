@@ -1,0 +1,5 @@
+cartesian_position_controller:
+  type: cartesian_controller/CartesianPositionController
+  publish_rate: 125
+  root_name: base_link
+  tip_name: ee_link

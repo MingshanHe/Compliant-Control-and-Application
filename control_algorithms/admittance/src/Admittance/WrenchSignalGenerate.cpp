@@ -29,11 +29,11 @@ int main(int argc, char ** argv)
         // wrench_msg.wrench.force.z = 5*sin(t);
         if(static_cast<int>(t)%10 < 5)
         {
-            wrench_msg.wrench.force.z = 30;
+            wrench_msg.wrench.force.z = 5;
         }
         else
         {
-            wrench_msg.wrench.force.z = -30;
+            wrench_msg.wrench.force.z = -5;
         }
         t += 1/TOPIC_HZ;
         wrench_pub.publish(wrench_msg);

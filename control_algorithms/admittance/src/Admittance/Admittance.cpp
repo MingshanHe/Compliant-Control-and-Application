@@ -160,7 +160,7 @@ void Admittance::state_wrench_callback(
     //                     msg->wrench.torque.z,
     //                     msg->wrench.torque.y,
     //                     msg->wrench.torque.x;
-    float force_thres_lower_limit_ = 23;
+    float force_thres_lower_limit_ = 3;
     float force_thres_upper_limit_ = 100;
     if(fabs(wrench_ft_frame(0)) < force_thres_lower_limit_ || fabs(wrench_ft_frame(0)) > force_thres_upper_limit_){wrench_ft_frame(0) = 0;}
     else{

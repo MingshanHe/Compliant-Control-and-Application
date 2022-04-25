@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<launch>
+  <rosparam file="$(find control_strategy)/config/control_strategy.yaml" command="load"/>
+  <rosparam file="$(find control_strategy)/config/filter.yaml" command="load"/>
+  <node pkg="control_strategy" name="control_strategy" type="control_strategy_node" output="screen"/>
+  <!-- <node pkg="rosbag" type="record" name="bag_record" args="/wrench -o $(find data_log)/bag/1.bag"/> -->
+</launch>

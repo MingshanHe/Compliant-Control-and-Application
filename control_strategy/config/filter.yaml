@@ -1,0 +1,4 @@
+Filter_K:     [0.2, 0.2, 0.2]
+Filter_K_d:   [0.1, 0.1, 0.1]
+LocalThres:   [1.0, 1.0, 1.0]
+GlobalThres:  [20.0, 20.0, 20.0]

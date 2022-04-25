@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>mir_robot</name>
+  <version>1.1.5</version>
+  <description>
+    URDF description, Gazebo simulation, navigation, bringup launch files, message and action descriptions for the MiR100 robot.
+  </description>
+
+  <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>
+  <author email="martin.guenther@dfki.de">Martin Günther</author>
+
+  <license>BSD</license>
+
+  <url type="website">https://github.com/dfki-ric/mir_robot</url>
+  <url type="repository">https://github.com/dfki-ric/mir_robot</url>
+  <url type="bugtracker">https://github.com/dfki-ric/mir_robot/issues</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <exec_depend>mir_actions</exec_depend>
+  <exec_depend>mir_description</exec_depend>
+  <exec_depend>mir_driver</exec_depend>
+  <exec_depend>mir_dwb_critics</exec_depend>
+  <exec_depend>mir_gazebo</exec_depend>
+  <exec_depend>mir_msgs</exec_depend>
+  <exec_depend>mir_navigation</exec_depend>
+  <exec_depend>sdc21x0</exec_depend>
+
+  <export>
+    <metapackage/>
+  </export>
+</package>

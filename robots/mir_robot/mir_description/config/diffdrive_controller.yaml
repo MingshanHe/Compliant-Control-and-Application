@@ -1,0 +1,99 @@
+# -----------------------------------
+mobile_base_controller:
+  type        : "diff_drive_controller/DiffDriveController"
+  left_wheel  : '$(arg prefix)left_wheel_joint'
+  right_wheel : '$(arg prefix)right_wheel_joint'
+  publish_rate: 41.2               # this is what the real MiR platform publishes (default: 50)
+  # These covariances are exactly what the real MiR platform publishes
+  pose_covariance_diagonal : [0.00001, 0.00001, 1000000.0, 1000000.0, 1000000.0, 1000.0]
+  twist_covariance_diagonal: [0.1, 0.1, 1000000.0, 1000000.0, 1000000.0, 1000.0]
+  enable_odom_tf: false
+
+  # Wheel separation and diameter. These are both optional.
+  # diff_drive_controller will attempt to read either one or both from the
+  # URDF if not specified as a parameter
+  wheel_separation : 0.445208
+  wheel_radius : 0.0625
+
+  # Wheel separation and radius multipliers
+  wheel_separation_multiplier: 1.0 # default: 1.0
+  wheel_radius_multiplier    : 1.0 # default: 1.0
+
+  # Velocity commands timeout [s], default 0.5
+  cmd_vel_timeout: 0.5
+
+  # frame_ids (same as real MiR platform)
+  base_frame_id: $(arg prefix)base_footprint # default: base_link
+  odom_frame_id: $(arg prefix)odom           # default: odom
+
+  # Velocity and acceleration limits
+  # Whenever a min_* is unspecified, default to -max_*
+  linear:
+    x:
+      has_velocity_limits    : true
+      max_velocity           : 1.0  # m/s; move_base max_vel_x: 0.8
+      has_acceleration_limits: true
+      max_acceleration       : 2.0  # m/s^2; move_base acc_lim_x: 1.5
+  angular:
+    z:
+      has_velocity_limits    : true
+      max_velocity           : 1.5  # rad/s; move_base max_rot_vel: 1.0
+      has_acceleration_limits: true
+      max_acceleration       : 2.5  # rad/s^2; move_base acc_lim_th: 2.0
+
+pos_joint_traj_controller:
+  type: position_controllers/JointTrajectoryController
+  joints: &robot_joints
+    - $(arg tf_prefix)ur5eshoulder_pan_joint
+    - $(arg tf_prefix)ur5eshoulder_lift_joint
+    - $(arg tf_prefix)ur5eelbow_joint
+    - $(arg tf_prefix)ur5ewrist_1_joint
+    - $(arg tf_prefix)ur5ewrist_2_joint
+    - $(arg tf_prefix)ur5ewrist_3_joint
+  constraints:
+    goal_time: 0.6
+    stopped_velocity_tolerance: 0.05
+    shoulder_pan_joint: {trajectory: 0.1, goal: 0.1}
+    shoulder_lift_joint: {trajectory: 0.1, goal: 0.1}
+    elbow_joint: {trajectory: 0.1, goal: 0.1}
+    wrist_1_joint: {trajectory: 0.1, goal: 0.1}
+    wrist_2_joint: {trajectory: 0.1, goal: 0.1}
+    wrist_3_joint: {trajectory: 0.1, goal: 0.1}
+  stop_trajectory_duration: 0.5
+  state_publish_rate: 125
+  action_monitor_rate: 10
+
+cartesian_velocity_controller:
+  type: cartesian_controller/CartesianVelocityController
+  publish_rate: 125
+  root_name: $(arg tf_prefix)ur5ebase_link
+  tip_name: $(arg tf_prefix)ur5ewrist_3_link
+  joints:
+    - $(arg tf_prefix)ur5eshoulder_pan_joint
+    - $(arg tf_prefix)ur5eshoulder_lift_joint
+    - $(arg tf_prefix)ur5eelbow_joint
+    - $(arg tf_prefix)ur5ewrist_1_joint
+    - $(arg tf_prefix)ur5ewrist_2_joint
+    - $(arg tf_prefix)ur5ewrist_3_joint
+cartesian_position_controller:
+  type: cartesian_controller/CartesianPositionController
+  publish_rate: 125
+  root_name: $(arg tf_prefix)ur5ebase_link
+  tip_name:  $(arg tf_prefix)ur5ewrist_3_link
+  joints:
+    - $(arg tf_prefix)ur5eshoulder_pan_joint
+    - $(arg tf_prefix)ur5eshoulder_lift_joint
+    - $(arg tf_prefix)ur5eelbow_joint
+    - $(arg tf_prefix)ur5ewrist_1_joint
+    - $(arg tf_prefix)ur5ewrist_2_joint
+    - $(arg tf_prefix)ur5ewrist_3_joint
+
+# Gripper controller
+gripper_controller:
+  type: position_controllers/GripperActionController
+  joint: robotiq_85_left_knuckle_joint
+  action_monitor_rate: 20
+  goal_tolerance: 0.002
+  max_effort: 100
+  stall_velocity_threshold: 0.001
+  stall_timeout: 1.0

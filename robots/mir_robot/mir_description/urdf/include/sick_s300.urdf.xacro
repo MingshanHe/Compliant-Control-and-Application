@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find mir_description)/urdf/include/common_properties.urdf.xacro" />
+
+  <xacro:property name="laser_x" value="0.156" />
+  <xacro:property name="laser_y" value="0.155" />
+  <xacro:property name="laser_z" value="0.185" />
+  <xacro:property name="laser_mass" value="2.0" />
+
+  <xacro:macro name="sick_s300" params="link topic prefix">
+    <link name="${prefix}${link}">
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="${pi} 0 0" />
+        <geometry>
+          <mesh filename="package://mir_description/meshes/visual/sick_lms-100.stl" />
+        </geometry>
+        <!-- <xacro:insert_block name="material_yellow" /> -->
+        <xacro:insert_block name="material_black" />
+      </visual>
+      <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="${pi} 0 0" />
+        <geometry>
+          <mesh filename="package://mir_description/meshes/visual/sick_lms-100.stl" />
+        </geometry>
+      </collision>
+      <xacro:box_inertial x="${laser_x}" y="${laser_y}" z="${laser_z}" mass="${laser_mass}">
+        <origin xyz="0 0 0" />
+      </xacro:box_inertial>
+    </link>
+
+    <gazebo reference="${prefix}${link}">
+      <!-- <material value="Gazebo/Yellow" /> -->
+      <material value="Gazebo/FlatBlack" />
+
+      <sensor type="ray" name="${prefix}${link}">
+        <pose>0 0 0 0 0 0</pose>
+        <visualize>false</visualize>
+        <update_rate>12.5</update_rate>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>541</samples>
+              <resolution>1</resolution>  <!-- has to be 1; actual resolution will be computed from number of samples + min_angle/max_angle -->
+              <min_angle>-2.35619449615</min_angle>
+              <max_angle>2.35619449615</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.05</min>
+            <max>29.0</max>
+            <resolution>0.01</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <!-- Noise parameters based on published spec for S300 achieving
+                 "+-29mm" accuracy at range < 3m (~0.01 of the range) at
+                 1 sigma. -->
+            <mean>0.0</mean>
+            <stddev>0.01</stddev>
+          </noise>
+        </ray>
+        <plugin name="gazebo_ros_${link}_controller" filename="libgazebo_ros_laser.so">
+          <frameName>${prefix}${link}</frameName>
+          <topicName>${topic}</topicName>
+        </plugin>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+</robot>

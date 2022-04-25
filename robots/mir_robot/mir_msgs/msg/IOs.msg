@@ -1,0 +1,12 @@
+string module_guid
+bool connected
+uint8 DONE=0
+uint8 STARTED=1
+uint8 ERROR=3
+uint8 status
+int8 num_inputs
+bool[] input_state
+int8 num_outputs
+bool[] output_state
+string ip
+string error

@@ -1,0 +1,7 @@
+uint8 PALLET_LIFT_STATE_DISABLED = 0
+uint8 PALLET_LIFT_STATE_MOVING = 1
+uint8 PALLET_LIFT_STATE_DOWN = 2
+uint8 PALLET_LIFT_STATE_UP = 3
+
+bool is_enabled
+uint8 state

@@ -1,0 +1,46 @@
+robot_base_frame: $(arg prefix)base_footprint
+transform_tolerance: 0.4
+update_frequency: 5.0
+publish_frequency: 1.0
+obstacle_range: 3.0
+#mark_threshold: 1
+publish_voxel_map: true
+navigation_map:
+  map_topic: /map
+obstacles:
+  observation_sources: b_scan_marking b_scan_clearing f_scan_marking f_scan_clearing
+  b_scan_marking:
+    topic: b_scan_rep117
+    data_type: LaserScan
+    clearing: false
+    marking: true
+    inf_is_valid: false
+    min_obstacle_height: 0.13
+    max_obstacle_height: 0.25
+  b_scan_clearing:
+    topic: b_scan_rep117
+    data_type: LaserScan
+    clearing: true
+    marking: false
+    inf_is_valid: false
+    min_obstacle_height: 0.13
+    max_obstacle_height: 0.25
+  f_scan_marking:
+    topic: f_scan_rep117
+    data_type: LaserScan
+    clearing: false
+    marking: true
+    inf_is_valid: false
+    min_obstacle_height: 0.13
+    max_obstacle_height: 0.25
+  f_scan_clearing:
+    topic: f_scan_rep117
+    data_type: LaserScan
+    clearing: true
+    marking: false
+    inf_is_valid: false
+    min_obstacle_height: 0.13
+    max_obstacle_height: 0.25
+virtual_walls_map:
+  map_topic: /virtual_walls/map
+  use_maximum: true

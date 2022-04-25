@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="gui" default="true" />
+  <arg name="tf_prefix" default="" doc="tf_prefix to be used by gazebo plugins and in the robot's urdf etc." />
+
+  <include file="$(find mir_gazebo)/launch/mir_empty_world.launch">
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="tf_prefix" value="$(arg tf_prefix)" />
+  </include>
+
+  <include file="$(find mir_gazebo)/launch/includes/spawn_maze.launch.xml" />
+</launch>

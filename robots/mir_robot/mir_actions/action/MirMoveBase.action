@@ -1,0 +1,118 @@
+#goal definition
+#move type
+int16 BASE_MOVE = 0
+int16 GLOBAL_MOVE = 1
+int16 RELATIVE_MOVE = 2
+int16 RELATIVE_MARKER_MOVE = 3
+int16 DOCKING_MOVE = 4
+int16 DOCKING_GLOBAL_MOVE = 5
+int16 move_task
+
+#shared parameters
+geometry_msgs/PoseStamped target_pose
+
+#global move parameters
+float64 goal_dist_threshold
+float64 goal_orientation_threshold
+nav_msgs/Path path
+float32 max_plan_time
+bool clear_costmaps
+bool pause_command
+bool continue_command
+
+#relative move parameters
+float64 yaw
+bool collision_detection
+bool collision_avoidance
+float64 disable_collision_check_dist
+float64 max_linear_speed
+float64 max_rotational_speed
+float64 pid_dist_offset
+float64 target_offset
+bool only_collision_detection
+float64 timeout
+
+#docking move parameters
+int32 pattern_type
+int32 pattern_value
+bool only_track
+bool same_goal
+string pose_frame
+geometry_msgs/Pose2D pose
+geometry_msgs/Pose2D offset
+float64 bar_length
+float64 bar_distance
+float64 shelf_leg_asymmetry_x
+float64 tolerance
+
+---
+#result definition
+
+#shared states
+int16 UNDEFINED = 0
+int16 GOAL_REACHED = 1
+int16 FAILED = -1
+
+#global move states
+int16 MARKER_VISIBLE = 2
+int16 FAILED_NO_PATH = -2
+int16 FAILED_GOAL_IN_STATIC_OBSTACLE = -3
+int16 FAILED_GOAL_IN_FORBIDDEN_AREA = -4
+int16 FAILED_GOAL_IN_DYNAMIC_OBSTACLE = -5
+int16 FAILED_ROBOT_IN_COLLISION = -6
+int16 FAILED_ROBOT_IN_FORBIDDEN_AREA = -7
+int16 FAILED_UNKNOWN_TRAILER = -8
+int16 FAILED_TO_PASS_GLOBAL_PLAN = -9
+int16 FAILED_NO_VALID_RECOVERY_CONTROL = -10
+int16 FAILED_UNKNOWN_PLANNER_ERROR = -11
+int16 FAILED_ROBOT_OSCILLATING = -12
+int16 FAILED_SOFTWARE_ERROR = -13
+
+#relative move states
+int16 FAILED_TIMEOUT = -14
+int16 FAILED_COLLISION = -15
+int16 INVALID_GOAL = -16
+
+#docking move states
+int16 FAILED_MARKER_TRACKING_ERROR = -17
+
+#shared results
+int16 end_state
+geometry_msgs/PoseStamped end_pose
+
+#docking results
+geometry_msgs/Pose2D pose
+
+#feedback for UI
+string message
+
+---
+#feedback
+#shared
+int8 NOT_READY = -1
+
+#global move states
+int8 PLANNING = 0
+int8 CONTROLLING = 1
+int8 CLEARING = 2
+
+#relative move states
+int8 DOCKING = 3
+int8 COLLISION = 4
+
+#shared feedback
+int8 state
+
+#global move feedback
+geometry_msgs/PoseStamped base_position
+
+#relative move feedback
+geometry_msgs/PoseStamped current_goal
+geometry_msgs/PoseStamped dist_to_goal
+
+#docking move feedback
+#int8 DOCKING = 0
+#int8 COLLISION = 1
+#int8 state
+geometry_msgs/Pose2D pose
+bool marker_inversion

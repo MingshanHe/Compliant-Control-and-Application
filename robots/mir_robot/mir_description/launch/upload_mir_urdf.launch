@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+<launch>
+  <arg name="tf_prefix" default="" doc="TF prefix to use for all of Mobipick's TF frames"/>
+
+  <param name="robot_description" command="$(find xacro)/xacro $(find mir_description)/urdf/mir_ur5e_gripper.urdf.xacro tf_prefix:=$(arg tf_prefix)" />
+</launch>

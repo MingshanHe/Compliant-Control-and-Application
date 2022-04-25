@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <!-- If tf_prefix is given, use "frame tf_prefix/imu_frame", else "imu_frame" -->
+  <xacro:arg name="tf_prefix" default="" />
+  <xacro:property name="tf_prefix" value="$(arg tf_prefix)" />
+  <xacro:if value="${tf_prefix == ''}">
+      <xacro:property name="imu_frame" value="imu_frame" />
+  </xacro:if>
+  <xacro:unless value="${tf_prefix == ''}">
+      <xacro:property name="imu_frame" value="$(arg tf_prefix)/imu_frame" />
+  </xacro:unless>
+
+
+  <xacro:macro name="imu_gazebo" params="link imu_topic update_rate">
+    <gazebo>
+      <plugin name="imu_plugin" filename="libhector_gazebo_ros_imu.so">
+        <updateRate>${update_rate}</updateRate>
+        <bodyName>${link}</bodyName>
+        <frameId>${imu_frame}</frameId>  <!-- from real MiR -->
+        <topicName>${imu_topic}</topicName>
+        <accelDrift>0.0 0.0 0.0</accelDrift>
+        <accelGaussianNoise>${sqrt(5e-05)} ${sqrt(0.0001)} ${sqrt(0.00013)}</accelGaussianNoise>    <!-- real MiR linear_acceleration_covariance: [5e-05, 0.0, 0.0, 0.0, 0.0001, 0.0, 0.0, 0.0, 0.00013] -->
+        <rateDrift>0.0 0.0 0.0</rateDrift>
+        <rateGaussianNoise>${sqrt(8e-06)} ${sqrt(8e-06)} ${sqrt(3e-07)}</rateGaussianNoise>         <!-- real MiR angular_velocity_covariance: [8e-06, 0.0, 0.0, 0.0, 8e-06, 0.0, 0.0, 0.0, 3e-07] -->
+        <yawDrift>0.0</yawDrift>
+        <yawGaussianNoise>${sqrt(0.1)}</yawGaussianNoise>                                           <!-- real MiR orientation_covariance: [0.1, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 0.1] -->
+      </plugin>
+    </gazebo>
+  </xacro:macro>
+</robot>

@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>mir_navigation</name>
+  <version>1.1.5</version>
+  <description>Launch and configuration files for move_base, localization etc. on the MiR robot.</description>
+
+  <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>
+  <author email="martin.guenther@dfki.de">Martin Günther</author>
+
+  <license>BSD</license>
+
+  <url type="website">https://github.com/dfki-ric/mir_robot</url>
+  <url type="repository">https://github.com/dfki-ric/mir_robot</url>
+  <url type="bugtracker">https://github.com/dfki-ric/mir_robot/issues</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roslaunch</build_depend>
+
+  <exec_depend>amcl</exec_depend>
+  <exec_depend>base_local_planner</exec_depend>
+  <exec_depend>dwa_local_planner</exec_depend>
+  <exec_depend>dwb_critics</exec_depend>         <!-- for dwb_local_planner -->
+  <exec_depend>dwb_local_planner</exec_depend>   <!-- for dwb_local_planner -->
+  <exec_depend>dwb_plugins</exec_depend>         <!-- for dwb_local_planner -->
+  <!-- <exec_depend>eband_local_planner</exec_depend> -->
+  <exec_depend>hector_mapping</exec_depend>
+  <exec_depend>map_server</exec_depend>
+  <exec_depend>mir_driver</exec_depend>
+  <exec_depend>mir_dwb_critics</exec_depend>     <!-- for dwb_local_planner -->
+  <exec_depend>mir_gazebo</exec_depend>
+  <exec_depend>move_base</exec_depend>
+  <exec_depend>nav_core_adapter</exec_depend>    <!-- for dwb_local_planner -->
+  <exec_depend>python3-matplotlib</exec_depend>
+  <exec_depend>sbpl_lattice_planner</exec_depend>
+  <exec_depend>teb_local_planner</exec_depend>
+</package>

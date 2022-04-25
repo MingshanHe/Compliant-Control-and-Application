@@ -1,0 +1,5 @@
+global_costmap:
+    plugins:
+        - {name: navigation_map, type: "costmap_2d::StaticLayer" }
+        - {name: obstacles,  type: "costmap_2d::VoxelLayer" }
+        - {name: inflation,  type: "costmap_2d::InflationLayer" }

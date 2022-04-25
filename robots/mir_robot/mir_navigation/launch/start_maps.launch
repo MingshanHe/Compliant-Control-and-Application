@@ -1,0 +1,13 @@
+<launch>
+  <arg name="map_file" default="$(find mir_gazebo)/maps/maze.yaml" doc="Path to a map .yaml file (required)." />
+  <arg name="virtual_walls_map_file" default="$(arg map_file)" doc="Path to a virtual walls map .yaml file (optional)." />
+  <arg name="with_virtual_walls" default="true" />
+
+  <node name="static_map_server" pkg="map_server" type="map_server" args="$(arg map_file)" ns="/" output="screen">
+    <param name="frame_id" type="string" value="map"/>
+  </node>
+
+  <node if="$(arg with_virtual_walls)" name="virtual_walls_map_server" pkg="map_server" type="map_server" args="$(arg virtual_walls_map_file)" ns="/virtual_walls" output="screen">
+    <param name="frame_id" type="string" value="map"/>
+  </node>
+</launch>

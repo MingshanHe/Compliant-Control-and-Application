@@ -1,0 +1,4 @@
+local_costmap:
+    plugins:
+        - {name: obstacles,  type: "costmap_2d::VoxelLayer" }
+        - {name: inflation,  type: "costmap_2d::InflationLayer" }

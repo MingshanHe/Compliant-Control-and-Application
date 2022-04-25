@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="robotiq_85_gripper_transmission" params="prefix">
+
+    <transmission name="${prefix}robotiq_85_left_knuckle_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${prefix}robotiq_85_left_knuckle_joint">
+        <hardwareInterface>PositionJointInterface</hardwareInterface>
+        <!-- <hardwareInterface>EffortJointInterface</hardwareInterface> -->
+      </joint>
+      <actuator name="${prefix}robotiq_85_left_knuckle_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+        <hardwareInterface>PositionJointInterface</hardwareInterface>
+        <!-- <hardwareInterface>EfforJointInterface</hardwareInterface> -->
+      </actuator>
+    </transmission>
+    
+    <!-- Mimic joints -->
+    <gazebo>
+      <plugin filename="libgazebo_mimic_joint_plugin.so" name="${prefix}mimic_robotiq_85_1">
+        <joint>${prefix}robotiq_85_left_knuckle_joint</joint>
+        <mimicJoint>${prefix}robotiq_85_right_knuckle_joint</mimicJoint>
+      </plugin>
+      <plugin filename="libgazebo_mimic_joint_plugin.so" name="${prefix}mimic_robotiq_85_2">
+        <joint>${prefix}robotiq_85_left_knuckle_joint</joint>
+        <mimicJoint>${prefix}robotiq_85_left_inner_knuckle_joint</mimicJoint>
+      </plugin>
+      <plugin filename="libgazebo_mimic_joint_plugin.so" name="${prefix}mimic_robotiq_85_3">
+        <joint>${prefix}robotiq_85_left_knuckle_joint</joint>
+        <mimicJoint>${prefix}robotiq_85_right_inner_knuckle_joint</mimicJoint>
+      </plugin>
+      <plugin filename="libgazebo_mimic_joint_plugin.so" name="${prefix}mimic_robotiq_85_4">
+        <joint>${prefix}robotiq_85_left_knuckle_joint</joint>
+        <mimicJoint>${prefix}robotiq_85_left_finger_tip_joint</mimicJoint>
+        <multiplier>-1.0</multiplier>
+        <offset>0.0</offset>
+      </plugin>
+      <plugin filename="libgazebo_mimic_joint_plugin.so" name="${prefix}mimic_robotiq_85_5">
+        <joint>${prefix}robotiq_85_left_knuckle_joint</joint>
+        <mimicJoint>${prefix}robotiq_85_right_finger_tip_joint</mimicJoint>
+        <multiplier>-1.0</multiplier>
+        <offset>0.0</offset>
+      </plugin>
+    </gazebo>
+
+  </xacro:macro>
+
+</robot>

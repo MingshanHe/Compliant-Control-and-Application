@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+
+<launch>
+  <arg name="gui" default="true" />
+
+  <!-- load MiR URDF -->
+  <include file="$(find mir_description)/launch/upload_mir_urdf.launch" />
+
+  <node if="$(arg gui)"     name="joint_state_publisher" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
+  <node unless="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher"     type="joint_state_publisher" />
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find mir_description)/rviz/mir_description.rviz" required="true" />
+</launch>

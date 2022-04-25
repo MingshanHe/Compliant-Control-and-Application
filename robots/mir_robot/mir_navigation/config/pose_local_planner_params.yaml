@@ -1,0 +1,46 @@
+base_local_planner: pose_follower/PoseFollower
+PoseFollower:
+    k_trans: 2.0
+    k_rot: 1.0
+
+    # within this distance to the goal, finally rotate to the goal heading (also, we've reached our goal only if we're within this dist)
+    tolerance_trans: 0.3
+
+    # we've reached our goal only if we're within this angular distance
+    tolerance_rot: 0.3
+
+    # we've reached our goal only if we're within range for this long and stopped
+    tolerance_timeout: 0.5
+
+    # set this to true if you're using a holonomic robot
+    holonomic: false
+
+    # number of samples (scaling factors of our current desired twist) to check the validity of
+    samples: 10
+
+    # go no faster than this
+    max_vel_lin: 0.3
+    max_vel_th: 0.5
+
+    # minimum velocities to keep from getting stuck
+    min_vel_lin: 0.03
+    min_vel_th: 0.1
+
+    # if we're rotating in place, go at least this fast to avoid getting stuck
+    min_in_place_vel_th: 0.1
+
+    # when we're near the end and would be trying to go no faster than this translationally, just rotate in place instead
+    in_place_trans_vel: 0.1
+
+    # we're "stopped" if we're going slower than these velocities
+    trans_stopped_velocity: 0.03
+    rot_stopped_velocity: 0.1
+
+    # if this is true, we don't care whether we go backwards or forwards
+    allow_backwards: true
+
+    # if this is true, turn in place to face the new goal instead of arcing toward it
+    turn_in_place_first: true
+
+    # if turn_in_place_first is true, turn in place if our heading is more than this far from facing the goal location
+    max_heading_diff_before_moving: 0.2

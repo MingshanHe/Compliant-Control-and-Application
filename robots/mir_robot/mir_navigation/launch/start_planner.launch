@@ -1,0 +1,38 @@
+<launch>
+  <arg name="local_planner"          default="dwb"             doc="Local planner can be either dwa, eband, base, teb or pose" />
+  <arg name="map_file" default="$(find mir_gazebo)/maps/maze.yaml" doc="Path to a map .yaml file (required)." />
+  <arg name="virtual_walls_map_file" default="$(arg map_file)" doc="Path to a virtual walls map .yaml file (optional)." />
+  <arg name="with_virtual_walls" default="true" />
+  <arg name="prefix" default="" />
+  <arg name="namespace" default="$(arg prefix)" doc="Namespace to push all topics into."/>
+
+  <group if="$(eval namespace != '')" ns="$(arg namespace)">
+    <include file="$(find mir_navigation)/launch/start_maps.launch">
+      <arg name="map_file" value="$(arg map_file)" />
+      <arg name="virtual_walls_map_file" value="$(arg virtual_walls_map_file)" />
+      <arg name="with_virtual_walls" value="$(arg with_virtual_walls)" />
+    </include>
+
+    <include file="$(find mir_navigation)/launch/move_base.xml">
+      <arg name="local_planner" value="$(arg local_planner)"/>
+      <arg name="with_virtual_walls" value="$(arg with_virtual_walls)" />
+      <arg name="prefix" value="$(arg prefix)" />
+    </include>
+  </group>
+
+  <!-- Duplicate of the above in case namespace is empty. This is necessary to
+       avoid the "<group> tag has an empty 'ns' attribute" parsing error. -->
+  <group unless="$(eval namespace != '')">
+    <include file="$(find mir_navigation)/launch/start_maps.launch">
+      <arg name="map_file" value="$(arg map_file)" />
+      <arg name="virtual_walls_map_file" value="$(arg virtual_walls_map_file)" />
+      <arg name="with_virtual_walls" value="$(arg with_virtual_walls)" />
+    </include>
+
+    <include file="$(find mir_navigation)/launch/move_base.xml">
+      <arg name="local_planner" value="$(arg local_planner)"/>
+      <arg name="with_virtual_walls" value="$(arg with_virtual_walls)" />
+      <arg name="prefix" value="$(arg prefix)" />
+    </include>
+  </group>
+</launch>

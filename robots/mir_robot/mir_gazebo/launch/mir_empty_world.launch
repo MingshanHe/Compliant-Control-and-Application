@@ -1,0 +1,61 @@
+<?xml version="1.0" ?>
+<launch>
+  <arg name="gui" default="true" />
+  <arg name="world_name" default="worlds/empty.world"/> <!-- Note: the world_name is with respect to GAZEBO_RESOURCE_PATH environmental variable, but can also be an absolute path -->
+
+  <arg name="robot_x"   default="0.0" />
+  <arg name="robot_y"   default="0.0" />
+  <arg name="robot_yaw" default="0.0" />
+
+  <arg name="tf_prefix" default="" doc="tf_prefix to be used by gazebo plugins and in the robot's urdf etc." />
+
+  <arg name="namespace" default="$(arg tf_prefix)" doc="Namespace to push all topics into."/>
+
+  <group if="$(eval namespace != '')">
+    <group>
+      <remap from="$(arg namespace)/joint_states"                   to="$(arg namespace)/mir/joint_states" />
+      <remap from="$(arg namespace)/mobile_base_controller/cmd_vel" to="$(arg namespace)/cmd_vel" />
+      <remap from="$(arg namespace)/mobile_base_controller/odom"    to="$(arg namespace)/odom" />
+
+      <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(arg world_name)"/>
+        <arg name="paused" value="true" />
+        <arg name="gui" value="$(arg gui)" />
+      </include>
+    </group>
+
+    <group ns="$(arg namespace)">
+      <!-- spawn robot and bring up controllers etc. -->
+      <include file="$(find mir_gazebo)/launch/mir_gazebo_common.launch">
+        <arg name="robot_x"   value="$(arg robot_x)" />
+        <arg name="robot_y"   value="$(arg robot_y)" />
+        <arg name="robot_yaw" value="$(arg robot_yaw)" />
+        <arg name="tf_prefix" value="$(arg tf_prefix)" />
+      </include>
+    </group>
+  </group>
+
+  <!-- Duplicate of the above in case namespace is empty. This is necessary to
+       avoid the "<group> tag has an empty 'ns' attribute" parsing error. -->
+  <group unless="$(eval namespace != '')">
+    <group>
+      <remap from="joint_states"                   to="mir/joint_states" />
+      <remap from="mobile_base_controller/cmd_vel" to="cmd_vel" />
+      <remap from="mobile_base_controller/odom"    to="odom" />
+
+      <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(arg world_name)"/>
+        <arg name="paused" value="true" />
+        <arg name="gui" value="$(arg gui)" />
+      </include>
+    </group>
+
+    <!-- spawn robot and bring up controllers etc. -->
+    <include file="$(find mir_gazebo)/launch/mir_gazebo_common.launch">
+      <arg name="robot_x"   value="$(arg robot_x)" />
+      <arg name="robot_y"   value="$(arg robot_y)" />
+      <arg name="robot_yaw" value="$(arg robot_yaw)" />
+      <arg name="tf_prefix" value="$(arg tf_prefix)" />
+    </include>
+  </group>
+</launch>

@@ -1,0 +1,25 @@
+<launch>
+    <!--node ns="local_costmap" name="voxel_grid_throttle" pkg="topic_tools" type="throttle" args="messages voxel_grid 3.0 voxel_grid_throttled" /-->
+    <arg name="local_planner" default="dwb" doc="Local planner can be either dwa, base, teb or pose"/>
+    <arg name="with_virtual_walls" default="true" doc="Enables usage of virtual walls when set. Set to false when running SLAM." />
+    <arg name="prefix" default="" doc="Prefix used for robot tf frames" /> <!-- used in the config files -->
+
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base_node" output="screen" clear_params="true">
+        <param name="SBPLLatticePlanner/primitive_filename" value="$(find mir_navigation)/mprim/unicycle_highcost_5cm.mprim" />
+        <rosparam file="$(find mir_navigation)/config/move_base_common_params.yaml" command="load" />
+        <rosparam file="$(find mir_navigation)/config/sbpl_global_params.yaml" command="load" />
+        <rosparam file="$(find mir_navigation)/config/$(arg local_planner)_local_planner_params.yaml" command="load" />
+        <!-- global costmap params -->
+        <rosparam file="$(find mir_navigation)/config/costmap_common_params.yaml" command="load" ns="global_costmap" subst_value="true" />
+        <rosparam file="$(find mir_navigation)/config/costmap_global_params.yaml" command="load" />
+        <rosparam file="$(find mir_navigation)/config/costmap_global_params_plugins_virtual_walls.yaml" command="load" if="$(arg with_virtual_walls)" />
+        <rosparam file="$(find mir_navigation)/config/costmap_global_params_plugins_no_virtual_walls.yaml" command="load" unless="$(arg with_virtual_walls)" />
+        <!-- local costmap params -->
+        <rosparam file="$(find mir_navigation)/config/costmap_common_params.yaml" command="load" ns="local_costmap" subst_value="true" />
+        <rosparam file="$(find mir_navigation)/config/costmap_local_params.yaml" command="load" subst_value="true" />
+        <rosparam file="$(find mir_navigation)/config/costmap_local_params_plugins_virtual_walls.yaml" command="load" if="$(arg with_virtual_walls)" />
+        <rosparam file="$(find mir_navigation)/config/costmap_local_params_plugins_no_virtual_walls.yaml" command="load" unless="$(arg with_virtual_walls)" />
+        <remap from="map" to="/map" />
+        <remap from="marker" to="move_base_node/DWBLocalPlanner/markers" />
+    </node>
+</launch>

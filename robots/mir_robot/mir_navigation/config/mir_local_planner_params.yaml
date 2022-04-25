@@ -1,0 +1,81 @@
+base_local_planner: mirLocalPlanner/MIRPlannerROS
+MIRPlannerROS:
+  # Robot configuration
+  max_vel_x: 0.8
+  min_vel_x: -0.2
+
+  min_trans_vel: 0.1  # this is the min trans velocity when there is negligible rotational velocity
+
+  # Warning!
+  #   do not set min_trans_vel to 0.0 otherwise dwa will always think translational velocities
+  #   are non-negligible and small in place rotational velocities will be created.
+
+  max_rot_vel: 1.0  # choose slightly less than the base's capability
+  min_rot_vel: 0.1  # this is the min angular velocity when there is negligible translational velocity
+
+  acc_lim_x: 1.5
+  acc_lim_y: 0.0      # diff drive robot
+  acc_lim_th: 2.0
+  min_inplace_rot: 0.15
+  max_inplace_rot: 0.6
+  min_in_place_rotational_vel: 0.2
+  escape_vel: -0.1
+  holonomic_robot: false
+
+  # Goal tolerance
+  yaw_goal_tolerance: 0.03  # yaw_goal_tolerance > (sim_time * min_rot_vel) / 2 (from Navigation Tuning Guide)
+  xy_goal_tolerance: 0.08   # xy_goal_tolerance  > (sim_time * min_vel_x)   / 2
+
+  # Forward simulaton
+  sim_time: 1.2
+  sim_granularity: 0.025
+  vx_samples: 15
+  vth_samples: 20
+  vtheta_samples: 20
+
+  # Trajectory scoring
+  path_distance_bias: 0.4        # weighting for how much it should stick to the global path plan
+  goal_distance_bias: 0.6        # weighting for how much it should attempt to reach its goal
+  occdist_scale: 0.01            # weighting for how much the controller should avoid obstacles
+  forward_point_distance: 0.325  # how far along to place an additional scoring point
+  stop_time_buffer: 0.2          # amount of time a robot must stop before colliding for a valid traj.
+  scaling_speed: 0.25            # absolute velocity at which to start scaling the robot's footprint
+  max_scaling_factor: 0.2        # how much to scale the robot's footprint when at speed.
+  heading_lookahead: 0.325
+  dwa: true
+
+  # Oscillation prevention
+  oscillation_reset_dist: 0.05  # how far to travel before resetting oscillation flags, in m
+
+
+  # Debugging
+  publish_visualization: false
+  publish_cost_grid_pc: false
+  global_frame_id: odom
+
+  # MiR specific parameters
+  tau_p: 5.0  # The proportional value in the CTE PID tracking
+  tau_i: 0.1  # The integral value in the CTE PID tracking
+  tau_d: 0.5  # The differential value in the CTE PID tracking
+  tau_w: 9.0  # The proportional angle value in the CTE tracking
+
+  k_rho: 1.0    # The proportional value to goal in Goal tracking
+  k_alfa: 8.0   # The diff angle between the robot and the goal in the Goal tracking
+  k_beta: -2.5  # The angle to the goal from the robot in the Goal tracking
+
+  blocked_path_dist: 3.0         # At what distance should the planner react when the path is blocked
+  blocked_path_dev: 60.0         # How far can we move from the planned path when it is blocked
+  blocked_path_action: new_plan  # Which action to take, when path is blocked
+  occ_path_dist: 3.0             # At what distance should the planner react when the path is near obstacle
+  occ_path_dev: 15.0             # How far can we move from the planned path when the path is near a obstacle
+  occ_path_level: 120.0          # Threshold level for a obstacle
+
+  cte_look_ahead: 0.2            # The max/min distance to add for the CTE tracking
+
+  penalize_negative_x: true      # Whether to penalize trajectories that have negative x velocities.
+
+  # non-dynamic parameters
+  dist_towards_obstacles: 1.5
+  dist_towards_obstacles_trolley: 1.75
+  goal_seek_tolerance: 2.0
+  goal_seek_tolerance_trolley: 0.25

@@ -1,0 +1,81 @@
+<launch>
+  <arg name="tf_prefix" default="" doc="TF prefix to use for all of MiR's TF frames"/>
+
+  <arg name="mir_hostname" default="192.168.12.20" />
+
+  <arg name="disable_map" default="false" doc="Disable the map topic and map -> odom TF transform from the MiR" />
+
+  <param name="tf_prefix" type="string" value="$(arg tf_prefix)"/>
+
+  <!-- URDF -->
+  <include file="$(find mir_description)/launch/upload_mir_urdf.launch" />
+
+  <!-- Robot state publisher -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+    <remap from="/tf"        to="tf_rss" />
+    <remap from="/tf_static" to="tf_static_rss" />
+  </node>
+
+  <!-- remove those TFs that are also published by the MiR to avoid conflicts -->
+  <node name="tf_remove_state_publisher_frames" pkg="mir_driver" type="tf_remove_child_frames.py" output="screen">
+    <remap from="tf_in"         to="tf_rss" />
+    <remap from="tf_out"        to="/tf" />
+    <remap from="tf_static_in"  to="tf_static_rss" />
+    <remap from="tf_static_out" to="/tf_static" />
+    <rosparam param="remove_frames">
+      - base_link
+      - front_laser_link
+      - back_laser_link
+      - camera_top_link
+      - camera_top_depth_optical_frame
+      - camera_floor_link
+      - camera_floor_depth_optical_frame
+      - imu_link
+    </rosparam>
+  </node>
+
+  <!-- MiR base -->
+  <group if="$(arg disable_map)">
+    <node name="mir_bridge" pkg="mir_driver" type="mir_bridge.py" output="screen">
+      <param name="hostname" value="$(arg mir_hostname)" />
+      <param name="tf_prefix" value="$(arg tf_prefix)" />
+      <remap from="map" to="map_mir" />
+      <remap from="map_metadata" to="map_metadata_mir" />
+      <remap from="rosout" to="/rosout" />
+      <remap from="rosout_agg" to="/rosout_agg" />
+      <remap from="tf" to="tf_mir" />
+    </node>
+
+    <!-- remove the map -> odom TF transform -->
+    <node name="tf_remove_mir_map_frame" pkg="mir_driver" type="tf_remove_child_frames.py" output="screen">
+      <remap from="tf_in"         to="tf_mir" />
+      <remap from="tf_out"        to="/tf" />
+      <rosparam param="remove_frames">
+        - odom
+      </rosparam>
+    </node>
+  </group>
+  <group unless="$(arg disable_map)">
+    <node name="mir_bridge" pkg="mir_driver" type="mir_bridge.py" output="screen">
+      <param name="hostname" value="$(arg mir_hostname)" />
+      <param name="tf_prefix" value="$(arg tf_prefix)" />
+      <remap from="map" to="/map" />
+      <remap from="map_metadata" to="/map_metadata" />
+      <remap from="rosout" to="/rosout" />
+      <remap from="rosout_agg" to="/rosout_agg" />
+      <remap from="tf" to="/tf" />
+    </node>
+  </group>
+
+  <node name="b_rep117_laser_filter" pkg="mir_driver" type="rep117_filter.py" output="screen">
+    <remap from="scan" to="b_scan" />
+    <remap from="scan_filtered" to="b_scan_rep117" />
+  </node>
+
+  <node name="f_rep117_laser_filter" pkg="mir_driver" type="rep117_filter.py" output="screen">
+    <remap from="scan" to="f_scan" />
+    <remap from="scan_filtered" to="f_scan_rep117" />
+  </node>
+
+  <node name="fake_mir_joint_publisher" pkg="mir_driver" type="fake_mir_joint_publisher.py" output="screen" />
+</launch>

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="tf_prefix" default="" />
+  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization_node" clear_params="true" output="screen">
+    <rosparam command="load" file="$(find mir_gazebo)/config/ekf.yaml" subst_value="true" />
+  </node>
+</launch>

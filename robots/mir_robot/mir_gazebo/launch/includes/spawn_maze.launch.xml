@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>
+    <node name="spawn_maze" pkg="gazebo_ros" type="spawn_model" args="-sdf
+      -file $(find mir_gazebo)/sdf/maze/model.sdf -model walls" output="screen" />
+</launch>

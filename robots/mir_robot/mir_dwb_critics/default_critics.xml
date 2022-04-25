@@ -1,0 +1,13 @@
+<class_libraries>
+  <library path="lib/libmir_dwb_critics">
+    <class type="mir_dwb_critics::PathProgressCritic" base_class_type="dwb_local_planner::TrajectoryCritic">
+      <description>Scores trajectories based on how far along the global path they end up.</description>
+    </class>
+    <class type="mir_dwb_critics::PathAngleCritic" base_class_type="dwb_local_planner::TrajectoryCritic">
+      <description>TODO</description>
+    </class>
+    <class type="mir_dwb_critics::PathDistPrunedCritic" base_class_type="dwb_local_planner::TrajectoryCritic">
+      <description>Scores trajectories based on the distance to the global path, only taking the parts into account that are still ahead of the robot.</description>
+    </class>
+  </library>
+</class_libraries>

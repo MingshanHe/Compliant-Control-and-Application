@@ -1,0 +1,2 @@
+float64 battery1_current
+float64 battery2_current

@@ -87,17 +87,24 @@ There are some pre-settings that will be needed to run in this project. Three mo
 3) Mobile Robot(mir robot) with a Robotic Arm(UR5E) and a Gripper(Robotiq)
 
 For change amoung them, this project have provided the setting params in the `mir.launch` file. And you also need to change the start controller for the robotic arm in `mir_gazebo_common.launch`
-```bash
-roslaunch mir_navigation move_base.xml with_virtual_walls:=false
-```
 #### Mapping
+`Gmapping:`
 ```bash
 roslaunch mir_navigation hector_mapping.launch
+```
+`MoveBase Framework:`
+```bash
+roslaunch mir_navigation move_base.xml with_virtual_walls:=false
 ```
 ```bash
 rviz -d $(rospack find mir_navigation)/rviz/navigation.rviz
 ```
 #### Navigation
+`AMCL Localization:`
+```bash
+roslaunch mir_navigation amcl.launch initial_pose_x:=10.0 initial_pose_y:=10.0
+```
+`MoveBase Framework:`
 ```bash
 roslaunch mir_navigation start_planner.launch \
     map_file:=$(rospack find mir_gazebo)/maps/maze.yaml \

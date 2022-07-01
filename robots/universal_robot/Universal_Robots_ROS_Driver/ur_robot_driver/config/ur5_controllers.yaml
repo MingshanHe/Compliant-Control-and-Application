@@ -125,6 +125,12 @@ vel_joint_traj_controller:
    state_publish_rate: *loop_hz
    action_monitor_rate: 20
 
+cartesian_velocity_controller:
+   type: cartesian_controller/CartesianVelocityController
+   publish_rate: 125
+   root_name: base_link
+   tip_name: wrist_3_link
+
 # Pass an array of joint velocities directly to the joints
 joint_group_vel_controller:
    type: velocity_controllers/JointGroupVelocityController

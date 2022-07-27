@@ -4,6 +4,8 @@
   <arg name="robot_y"   default="0.0" />
   <arg name="robot_yaw" default="0.0" />
 
+  <arg name="mir_type" default="mir_100" doc="The MiR variant. Can be 'mir_100' or 'mir_250' for now." />
+
   <arg name="tf_prefix" default="" doc="tf_prefix to be used by gazebo plugins and in the robot's urdf etc." />
 
   <arg name="prefix" value="$(arg tf_prefix)/" if="$(eval tf_prefix != '')" /> <!-- $(arg prefix) is used in all the config files! TODO: For multiple robots, create groups when loading the parameters to overwrite the arg? -->
@@ -14,6 +16,7 @@
 
   <!-- Load URDF -->
   <include file="$(find mir_description)/launch/upload_mir_urdf.launch">
+    <arg name="mir_type" value="$(arg mir_type)" />
     <arg name="tf_prefix" value="$(arg tf_prefix)" />
   </include>
 
@@ -27,16 +30,15 @@
 
   <!-- Start the controllers -->
   <node name="controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-    args="joint_state_controller mobile_base_controller "/>
+    args="joint_state_controller mobile_base_controller cartesian_velocity_controller"/>
 
   <node name="ros_control_stopped_spawner" pkg="controller_manager" type="spawner" respawn="false"
-    output="screen" args="--stopped  cartesian_velocity_controller cartesian_position_controller"/>
-
+    output="screen" args="--stopped  cartesian_position_controller"/>
 
   <!-- EKF -->
-  <include file="$(find mir_gazebo)/launch/includes/ekf.launch.xml">
+  <!-- <include file="$(find mir_gazebo)/launch/includes/ekf.launch.xml">
       <arg name="tf_prefix" value="$(arg prefix)" />
-  </include>
+  </include> -->
 
   <!-- Add passive + mimic joints to joint_states topic -->
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">

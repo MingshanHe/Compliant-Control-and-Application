@@ -8,36 +8,29 @@
   <!-- UR5E base -->
   <xacro:include filename="$(find ur_description)/urdf/inc/ur5e_macro.xacro"/>
 
-  <xacro:arg name="tf_prefix" default="" />
-  <xacro:property name="tf_prefix_" value="$(arg tf_prefix)" />
-  <xacro:if value="${tf_prefix_ == ''}">
-    <xacro:property name="prefix" value="" />
-  </xacro:if>
-  <xacro:unless value="${tf_prefix_ == ''}">
-    <xacro:property name="prefix" value="${tf_prefix_}/" />
-  </xacro:unless>
 
-  <xacro:mir_100 prefix="${prefix}"/>
+  <xacro:mir_100 prefix=""/>
   <xacro:controller_plugin_gazebo robot_namespace=""/>
 
 
   <!-- MIR + UR5E + Robotiq + Kinect V2-->
-  <xacro:ur5e_robot prefix="${tf_prefix}_ur5e" />
+  <xacro:ur5e_robot prefix="ur5e" />
 
-  <joint name="${tf_prefix}_ur5e_fixed_joint" type="fixed">
+  <joint name="ur5e_fixed_joint" type="fixed">
     <origin xyz="0 0 0.35" rpy="0 0 0" />
-    <parent link="$(arg tf_prefix)/base_link"/>
-    <child link="${tf_prefix}_ur5ebase_link"/>
+    <parent link="base_link"/>
+    <child link="ur5ebase_link"/>
   </joint>
 
-  <joint name="${tf_prefix}_tool_joint" type="fixed">
+
+  <joint name="ur5e_tool_joint" type="fixed">
     <axis xyz="0 1 0" />
     <origin xyz="0.0 0.0 0.16" rpy="0.0 0.0 0.0"/>
-    <parent link="$(arg tf_prefix)_ur5etool0"/>
-    <child link="${tf_prefix}_tool_link"/>
+    <parent link="ur5etool0"/>
+    <child link="box_tool_link"/>
   </joint>
 
-  <link name="${tf_prefix}_tool_link">
+  <link name="box_tool_link">
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -57,114 +50,6 @@
     </inertial>
   </link>
 
-
-
-  <!-- Gazebo plugin -->
-  <gazebo reference="${tf_prefix}_camera_link1">
-    <sensor type="camera" name="camera1">
-      <update_rate>100.0</update_rate>
-      <camera name="camera1">
-        <horizontal_fov>1.3962634</horizontal_fov>
-        <image>
-          <width>800</width>
-          <height>800</height>
-          <format>R8G8B8</format>
-        </image>
-        <clip>
-          <near>0.02</near>
-          <far>300</far>
-        </clip>
-        <noise>
-          <type>gaussian</type>
-          <mean>0.0</mean>
-          <stddev>0.007</stddev>
-        </noise>
-      </camera>
-      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
-        <alwaysOn>true</alwaysOn>
-        <updateRate>100.0</updateRate>
-        <cameraName>camera1</cameraName>
-        <imageTopicName>image_raw_camera1</imageTopicName>
-        <cameraInfoTopicName>camera_info1</cameraInfoTopicName>
-        <frameName>${tf_prefix}_camera_link1</frameName>
-        <hackBaseline>0.07</hackBaseline>
-        <distortionK1>0.0</distortionK1>
-        <distortionK2>0.0</distortionK2>
-        <distortionK3>0.0</distortionK3>
-        <distortionT1>0.0</distortionT1>
-        <distortionT2>0.0</distortionT2>
-      </plugin>
-    </sensor>
-  </gazebo>
-
-
-
-  <joint name="${tf_prefix}_camera_joint2" type="fixed">
-    <axis xyz="0 1 0" />
-    <origin xyz="0.0 -0.055 -0.055" rpy="0.0 -1.5707963 0.0"/>
-    <parent link="$(arg tf_prefix)_ur5etool0"/>
-    <child link="${tf_prefix}_camera_link2"/>
-  </joint>
-
-  <link name="${tf_prefix}_camera_link2">
-    <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.025 0.025 0.025"/>
-      </geometry>
-    </collision>
-
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.025 0.025 0.025"/>
-      </geometry>
-    </visual>
-
-    <inertial>
-      <mass value="1e-5" />
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
-    </inertial>
-  </link>
-
-  <!-- Gazebo plugin -->
-  <gazebo reference="${tf_prefix}_camera_link2">
-    <sensor type="camera" name="camera2">
-      <update_rate>100.0</update_rate>
-      <camera name="camera2">
-        <horizontal_fov>1.3962634</horizontal_fov>
-        <image>
-          <width>800</width>
-          <height>800</height>
-          <format>R8G8B8</format>
-        </image>
-        <clip>
-          <near>0.02</near>
-          <far>300</far>
-        </clip>
-        <noise>
-          <type>gaussian</type>
-          <mean>0.0</mean>
-          <stddev>0.007</stddev>
-        </noise>
-      </camera>
-      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
-        <alwaysOn>true</alwaysOn>
-        <updateRate>100.0</updateRate>
-        <cameraName>camera2</cameraName>
-        <imageTopicName>image_raw_camera2</imageTopicName>
-        <cameraInfoTopicName>camera_info2</cameraInfoTopicName>
-        <frameName>${tf_prefix}_camera_link2</frameName>
-        <hackBaseline>0.07</hackBaseline>
-        <distortionK1>0.0</distortionK1>
-        <distortionK2>0.0</distortionK2>
-        <distortionK3>0.0</distortionK3>
-        <distortionT1>0.0</distortionT1>
-        <distortionT2>0.0</distortionT2>
-      </plugin>
-    </sensor>
-  </gazebo>
 
   <gazebo reference="$(arg tf_prefix)_ur5ewrist_3_joint">
     <provideFeedback>true</provideFeedback>

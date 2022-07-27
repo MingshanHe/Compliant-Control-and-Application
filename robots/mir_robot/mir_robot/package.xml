@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>mir_robot</name>
-  <version>1.1.5</version>
+  <version>1.1.6</version>
   <description>
-    URDF description, Gazebo simulation, navigation, bringup launch files, message and action descriptions for the MiR100 robot.
+    URDF description, Gazebo simulation, navigation, bringup launch files, message and action descriptions for the MiR robot.
   </description>
 
   <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>

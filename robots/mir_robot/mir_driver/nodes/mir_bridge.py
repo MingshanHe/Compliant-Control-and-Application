@@ -391,7 +391,7 @@ class SubscriberWrapper(object):
         self.robot.publish(absolute_topic, msg_dict)
 
 
-class MiR100Bridge(object):
+class MiRBridge(object):
     def __init__(self):
         try:
             hostname = rospy.get_param('~hostname')
@@ -484,7 +484,7 @@ class MiR100Bridge(object):
 
 def main():
     rospy.init_node('mir_bridge')
-    MiR100Bridge()
+    MiRBridge()
     rospy.spin()
 
 

@@ -2,6 +2,22 @@
 Changelog for package mir_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.6 (2022-06-02)
+------------------
+* URDF: Downsize inertia box, move to lower back
+* URDF: Pull out inertia properties
+* URDF: Update masses according to data sheet
+* URDF: Add mir_250
+* Add arg mir_type to launch files and urdfs
+* Add mir_250 meshes
+* URDF: Make wheels black
+* Add mir_100_v1.urdf.xacro for backwards compatibility
+* Rename mir_100 -> mir
+* Refactor URDF to prepare for MiR250 support
+* Gazebo: Don't manually specify wheel params for diffdrive controller
+* Simplify mir_100 collision mesh further
+* Contributors: Martin Günther
+
 1.1.5 (2022-02-11)
 ------------------
 * Remove xacro comment to work around xacro bug

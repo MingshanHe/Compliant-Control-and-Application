@@ -1,6 +1,7 @@
 <?xml version="1.0" ?>
 <launch>
-  <arg name="tf_prefix" default="" doc="TF prefix to use for all of Mobipick's TF frames"/>
+  <arg name="mir_type"  default="mir_100" doc="The MiR variant. Can be 'mir_100' or 'mir_250' for now." />
+  <arg name="tf_prefix" default="" doc="TF prefix to use for all of the MiR's TF frames"/>
 
-  <param name="robot_description" command="$(find xacro)/xacro $(find mir_description)/urdf/mir_ur5e_gripper.urdf.xacro tf_prefix:=$(arg tf_prefix)" />
+  <param name="robot_description" command="$(find xacro)/xacro $(find mir_description)/urdf/mir_ur5e.urdf.xacro mir_type:=$(arg mir_type) tf_prefix:=$(arg tf_prefix)" />
 </launch>

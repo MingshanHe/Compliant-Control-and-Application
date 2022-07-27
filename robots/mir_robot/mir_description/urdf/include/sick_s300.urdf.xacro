@@ -6,7 +6,7 @@
   <xacro:property name="laser_x" value="0.156" />
   <xacro:property name="laser_y" value="0.155" />
   <xacro:property name="laser_z" value="0.185" />
-  <xacro:property name="laser_mass" value="2.0" />
+  <xacro:property name="laser_mass" value="1.2" />
 
   <xacro:macro name="sick_s300" params="link topic prefix">
     <link name="${prefix}${link}">

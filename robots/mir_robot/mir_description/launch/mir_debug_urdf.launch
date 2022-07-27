@@ -1,10 +1,13 @@
 <?xml version="1.0" ?>
 
 <launch>
+  <arg name="mir_type" default="mir_100" doc="The MiR variant. Can be 'mir_100' or 'mir_250' for now." />
   <arg name="gui" default="true" />
 
   <!-- load MiR URDF -->
-  <include file="$(find mir_description)/launch/upload_mir_urdf.launch" />
+  <include file="$(find mir_description)/launch/upload_mir_urdf.launch">
+    <arg name="mir_type" value="$(arg mir_type)" />
+  </include>
 
   <node if="$(arg gui)"     name="joint_state_publisher" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
   <node unless="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher"     type="joint_state_publisher" />

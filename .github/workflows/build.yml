@@ -34,5 +34,8 @@ jobs:
         if: ${{ matrix.ros_version == 1 }}
         uses: ros-tooling/action-ros-ci@v0.2
         with:
-          package-name: cartesian_state_msgs
+          package-name: 
+            cartesian_state_msgs 
+            cartesian_velocity_controller
+            admittance
           target-ros1-distro: ${{ matrix.ros_distribution }}

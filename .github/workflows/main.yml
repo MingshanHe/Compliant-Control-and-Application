@@ -1,0 +1,46 @@
+name: Build
+
+# Controls when the workflow will run
+on:
+  push:
+    branches:
+    - 'noetic'
+  pull_request:
+    branches:
+    - 'noetic'
+
+jobs:
+  test_docker:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ros_distribution:
+          - noetic
+
+        include:
+          - docker_image: ubuntu:focal
+            ros_distribution: noetic
+            ros_version: 1
+
+    container:
+      image: ${{ matrix.docker_image }}
+    steps:
+      - name: setup ROS environment
+        uses: ros-tooling/setup-ros@v0.3
+        with:
+          required-ros-distributions: ${{ matrix.ros_distribution }}
+      - name: build and test ROS 1
+        if: ${{ matrix.ros_version == 1 }}
+        uses: ros-tooling/action-ros-ci@v0.2
+        with:
+          package-name: 
+            cartesian_state_msgs 
+            joint_effort_msg
+            joint_state_msg
+            cartesian_velocity_controller
+            cartesian_position_controller
+            joint_torque_controller
+            admittance
+            impedance
+          target-ros1-distro: ${{ matrix.ros_distribution }}

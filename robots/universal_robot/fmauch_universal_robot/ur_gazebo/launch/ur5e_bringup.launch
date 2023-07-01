@@ -37,7 +37,7 @@
   <arg name="physical_params" default="$(find ur_description)/config/ur5e/physical_parameters.yaml"/>
   <arg name="visual_params" default="$(find ur_description)/config/ur5e/visual_parameters.yaml"/>
   <!-- 1. PositionJointInterface 2. EffortJointInterface -->
-  <arg name="transmission_hw_interface" default="hardware_interface/EffortJointInterface"/>
+  <arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
   <arg name="environment" default="empty" doc="Specify the virtual environment"/>
   <arg name="gazebo_world" default="$(find ur_gazebo)/worlds/$(arg environment).world"/>
 

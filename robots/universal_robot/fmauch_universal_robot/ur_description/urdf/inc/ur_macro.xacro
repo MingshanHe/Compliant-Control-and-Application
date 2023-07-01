@@ -76,8 +76,8 @@
     <xacro:ur_arm_transmission prefix="${prefix}" hw_interface="${transmission_hw_interface}" />
 
     <!-- links: main serial chain -->
-    <link name="${prefix}base_link"/>
-    <link name="${prefix}base_link_inertia">
+    <link name="${prefix}base_link_inertia"/>
+    <link name="${prefix}base_link">
       <visual>
         <origin xyz="0 0 0" rpy="0 0 ${pi}"/>
         <geometry>
@@ -221,8 +221,8 @@
 
     <!-- joints: main serial chain -->
     <joint name="${prefix}base_link-base_link_inertia" type="fixed">
-      <parent link="${prefix}base_link" />
-      <child link="${prefix}base_link_inertia" />
+      <parent link="${prefix}base_link_inertia" />
+      <child link="${prefix}base_link" />
       <!-- 'base_link' is REP-103 aligned (so X+ forward), while the internal
            frames of the robot/controller have X+ pointing backwards.
            Use the joint between 'base_link' and 'base_link_inertia' (a dummy
@@ -231,7 +231,7 @@
       <origin xyz="0 0 0" rpy="0 0 ${pi}" />
     </joint>
     <joint name="${prefix}shoulder_pan_joint" type="revolute">
-      <parent link="${prefix}base_link_inertia" />
+      <parent link="${prefix}base_link" />
       <child link="${prefix}shoulder_link" />
       <origin xyz="${shoulder_x} ${shoulder_y} ${shoulder_z}" rpy="${shoulder_roll} ${shoulder_pitch} ${shoulder_yaw}" />
       <axis xyz="0 0 1" />

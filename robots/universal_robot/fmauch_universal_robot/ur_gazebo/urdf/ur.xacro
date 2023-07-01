@@ -74,7 +74,7 @@
   <link name="world"/>
   <joint name="world_joint" type="fixed">
     <parent link="world"/>
-    <child link="base_link"/>
+    <child link="base_link_inertia"/>
     <origin xyz="0 0 0" rpy="0 0 0"/>
   </joint>
 </robot>

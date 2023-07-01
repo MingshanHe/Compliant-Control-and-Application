@@ -7,3 +7,4 @@ sudo apt-get install -y ros-${ros_distro}-industrial-robot-status-interface
 sudo apt-get install -y ros-${ros_distro}-ur-msgs
 sudo apt-get install -y ros-${ros_distro}-pass-through-controllers
 sudo apt-get install -y ros-${ros_distro}-ur-client-library
+sudo apt-get install -y ros-${ros_distro}-ur-client-library

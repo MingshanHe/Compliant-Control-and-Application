@@ -41,9 +41,9 @@ stiffness_coupling: [10,0,0,0,0,0,
 base_link: "base_link"
 end_link: "wrist_3_link"
 # [position (x, y, z)  orientation (x, y, z, w)]
-# desired_pose:  [0.4,0.0,0.50,       0.707, -0.707, 0.0, 0.0]
+desired_pose:  [-0.4,0.0,0.50,       0.707, -0.707, 0.0, 0.0]
 
-desired_pose:  [0.5,0.0,0.50,       0.477, -0.480, 0.646, -0.353]
+# desired_pose:  [0.5,0.0,0.50,       0.477, -0.480, 0.646, -0.353]
 workspace_limits: [-0.50, 0.50, 0.25, 0.80, 0.30, 0.75]
 
 arm_max_vel: 1.5

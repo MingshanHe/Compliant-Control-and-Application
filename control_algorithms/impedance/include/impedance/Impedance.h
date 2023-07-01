@@ -27,7 +27,7 @@
 #include "geometry_msgs/Wrench.h"
 #include "std_msgs/Float64MultiArray.h"
 
-typedef Matrix<double, 6, 6> Matrix6d;
+typedef Eigen::Matrix<double, 6, 6> Matrix6d;
 class Impedance: public kdl_base::KDL_Base
 {
 public:

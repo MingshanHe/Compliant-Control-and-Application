@@ -1,68 +1,89 @@
-# Robotic_Arm_Algorithms
+# Compliant Control and Application
 
-  It contains the common algorithms in robotic arm, and will be recording the development as soon as I have completed the any one algorithm. The chosen robot is **universal robot** which is the most popular collaborate robot in the world.
+Admittance control and hybrid position/force control for robot arms.
 
-## Algorithm List
+Branch `sim-ros2`: ROS 2 Lyrical + Gazebo Sim, simulation. (ROS 1: branch `noetic`.)
+Robots: UR5 (`ur5`), Franka Research 3 (`franka`), Seeed reBot Arm B601-DM (`b601_dm`).
 
-  **Notice**: In this repository, I have used ur5e robot and its `urdf` file need to be changed in different situation, like need or not a force/torque sensor in the end effector. Please check the `urdf` file seriously and run the algorithm, Thanks.
-### Pre.
-  After compiling the code successfully, please source the workspace before running the following commands.
-  ```bash
-  $ source devel/setup.bash
-  ```
+## Architecture
 
-### 1. Admittance
+![Architecture](Image/architecture.svg)
 
-  In compliant control, admittance control and impedance control are the most common control algorithms and equivalent each other. For running this algorithms, there are only two commands:
+- `control_algorithms/`: admittance and hybrid position/force control nodes. They send an end-effector twist.
+- `robot_controllers/`: `cartesian_velocity_controller` (ros2_control) turns the twist into joint velocities.
+- `robots/`: one `<robot>_sim` package per robot, and `robot_sim_bringup` to start the simulation.
 
-  First of all, running a gazebo environment and upload a universal robot. I usually chose a **ur5e**.
+## Installation
 
-```bash
-$ roslaunch ur_e_gazebo ur5e.launch controller:=cartesian_velocity_controller_sim
-```
+### Ubuntu 26.04
 
-  Then, running the admittance control algorithm and you can observe the performance of it.
+Install [ROS 2 Lyrical](https://docs.ros.org/en/lyrical/Installation/Ubuntu-Install-Debs.html), then:
 
 ```bash
-$ roslaunch Admittance Admittance_test.lanch
+sudo apt install ros-lyrical-ros2-control ros-lyrical-ros2-controllers \
+  ros-lyrical-gz-ros2-control ros-lyrical-ros-gz ros-lyrical-xacro \
+  ros-lyrical-ur-description python3-vcstool
+
+mkdir -p ~/cca_ws/src && cd ~/cca_ws/src
+git clone -b sim-ros2 https://github.com/MingshanHe/Compliant-Control-and-Application.git
+cd Compliant-Control-and-Application && vcs import robots < robots/robots.repos
+cd ~/cca_ws && source /opt/ros/lyrical/setup.bash && colcon build --symlink-install
+echo 'source ~/cca_ws/install/setup.bash' >> ~/.bashrc
 ```
 
-  In this lanch file, it contains a node to publish a wrench signal to imitate an external force caused by operator. If you want to run it without publish node and to publish by yourself other package, you can run the following command. And the performance is shown in following gif file.
+### Windows (WSL2)
+
+Install Ubuntu 26.04 in WSL2 and follow the Ubuntu steps. In WSL2 the default
+ROS 2 middleware may not connect the nodes, so use Zenoh:
 
 ```bash
-$ roslaunch Admittance Admittance.launch
+sudo apt install ros-lyrical-rmw-zenoh-cpp
+echo 'export RMW_IMPLEMENTATION=rmw_zenoh_cpp' >> ~/.bashrc
+sudo usermod -aG video,render $USER    # GPU for Gazebo; then run `wsl --shutdown` in PowerShell
 ```
 
-### 2. Hybrid Position Force Control
-
-  In industrial polishing, coating painting, and so forth, the robotic arm needs to be controlled to move along the surface with pressure. The constant pressure provides a vertical force along the surface and won't be changed during moving. Because of it, the end effector and contact surface exist friction which causes the polishing and painting.
-
-  In this control algorithms, I have used a car wheel to imitate a curve surface that needs to be processed. This control algorithm contains position servo and forces closed-loop control as its name.
-
-  First of all, running the gazebo environment which contains a universal robot and a car wheel beside it.
+Keep the Zenoh router running in its own terminal while you use ROS:
 
 ```bash
-$ roslaunch ur_e_gazebo ur5e.launch controller:=cartesian_velocity_controller_sim environment:=polish
+ros2 run rmw_zenoh_cpp rmw_zenohd
 ```
 
-  Then, running the hybrid position force control
+### macOS
+
+Not supported.
+
+## Usage
+
+Start a robot (`robot:=ur5 | franka | b601_dm`):
 
 ```bash
-$ roslaunch hybrid_position_force_control hybrid_position_force_control.launch
+ros2 launch robot_sim_bringup sim.launch.py robot:=ur5
 ```
 
-  And then it needs to use the topic publish command in the terminal. It is recommended to move to $[0.1,0.4,0.45]$ which along the **x** Axis at first, and then move to $[0.1,0.4,0.3]$ in **z** Axis. This makes the end contact with the curve surface and has a little slope angle. According to the force close-loop algorithm, the end effector will change its orientation to adapt it. At last, you command it to move to $[-0,1,0.4,0.3]$ along the **x** Axis which is simulated in the polish experiment. And the performance is shown in the following gif file.
+**Admittance:** a test force of ±1.5 N moves the tool up and down.
 
-### 3. Rapidly-exploring Random Tree (RRT)
+```bash
+ros2 launch admittance admittance_test.launch.py robot:=ur5
+```
 
+**Hybrid position/force control:** press on a car wheel and slide along it.
 
+```bash
+ros2 launch robot_sim_bringup sim.launch.py robot:=ur5 world:=polish
+ros2 launch hybrid_position_force_control hybrid_position_force_control.launch.py robot:=ur5
+ros2 topic pub --once /desired_cartesian_pose_cmd geometry_msgs/msg/Pose "{position: {x: 0.487, y: 0.109, z: 0.17}}"
+```
 
-## Performance
+Targets in the robot base frame:
 
-### 1. Admittance
+| Robot | Press | Slide (change y) | Home |
+|-------|-------|------------------|------|
+| `ur5` | `0.487, 0.109, 0.17` | 0.05 … 0.17 | `0.487, 0.109, 0.29` |
+| `franka` | `0.307, 0.0, 0.30` | −0.06 … 0.06 | `0.307, 0.0, 0.448` |
+| `b601_dm` | `0.341, 0.0, -0.025` | −0.05 … 0.05 | `0.341, 0.0, 0.056` |
 
-![1](Image/Admittance.gif)
+Parameters: `control_algorithms/<algorithm>/config/<robot>.yaml`.
+Adding a robot: see [`robots/README.md`](robots/README.md).
 
-### 2. Hybrid Position Force Control
-
-![2](Image/Hybrid_Position_Force_Control.gif)
+If the robot does not appear in Gazebo, the ROS 2 nodes cannot reach each
+other: use Zenoh as in the WSL2 section.

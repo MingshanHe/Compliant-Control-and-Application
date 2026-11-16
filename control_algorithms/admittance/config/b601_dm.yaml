@@ -1,0 +1,45 @@
+# Admittance control for the reBot Arm B601-DM (robots/b601_dm/b601_dm_sim).
+#   M * a + D * v + K * (x - x_desired) = F_external
+# Smaller arm than the UR5: K = 30 N/m (+/- 5 cm for the 1.5 N test force).
+# Matrices are 6x6, row-major,
+# ordered [x y z rx ry rz] in base_link.
+/**:
+  ros__parameters:
+    frequency: 100.0
+    mass_arm: [2.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+               0.0, 2.0, 0.0, 0.0, 0.0, 0.0,
+               0.0, 0.0, 2.0, 0.0, 0.0, 0.0,
+               0.0, 0.0, 0.0, 2.0, 0.0, 0.0,
+               0.0, 0.0, 0.0, 0.0, 2.0, 0.0,
+               0.0, 0.0, 0.0, 0.0, 0.0, 2.0]
+    damping_arm: [20.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                  0.0, 20.0, 0.0, 0.0, 0.0, 0.0,
+                  0.0, 0.0, 20.0, 0.0, 0.0, 0.0,
+                  0.0, 0.0, 0.0, 10.0, 0.0, 0.0,
+                  0.0, 0.0, 0.0, 0.0, 10.0, 0.0,
+                  0.0, 0.0, 0.0, 0.0, 0.0, 10.0]
+    stiffness_coupling: [30.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                         0.0, 30.0, 0.0, 0.0, 0.0, 0.0,
+                         0.0, 0.0, 30.0, 0.0, 0.0, 0.0,
+                         0.0, 0.0, 0.0, 10.0, 0.0, 0.0,
+                         0.0, 0.0, 0.0, 0.0, 10.0, 0.0,
+                         0.0, 0.0, 0.0, 0.0, 0.0, 10.0]
+
+    base_link: base_link
+    end_link: tcp
+    # Equilibrium [x y z qx qy qz qw] in base_link (home pose, probe ~15 deg from vertical).
+    # Leave empty ([]) to use the pose at start-up.
+    desired_pose: [0.3414, 0.0, 0.0563, 0.0, 0.9908, 0.0, 0.1350]
+
+    arm_max_vel: 1.5
+    arm_max_acc: 1.0
+    # Forces/torques below these values are ignored (the probe weighs 0.5 N).
+    force_deadzone_thres: 1.0
+    torque_deadzone_thres: 0.2
+
+# Synthetic operator force for admittance_test.launch.py: +/- amplitude along
+# `direction` (base frame), 10 s square wave -> about +/- amplitude / K [m].
+wrench_signal_generate:
+  ros__parameters:
+    amplitude: 1.5
+    direction: [0.0, 0.0, 1.0]

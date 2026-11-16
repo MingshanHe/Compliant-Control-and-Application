@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+<!--
+  Building blocks shared by every simulated robot in robots/:
+
+    sim_joint               one joint of the gz_ros2_control system
+    sim_ft_sensor           the F/T sensor entry of the gz_ros2_control system
+    ft_probe_tool           a 6-axis F/T sensor with a spring-loaded probe behind it
+    sim_probe_joint         read-only ros2_control entry of the passive probe joint
+    gz_ros2_control_plugin  loads gz_ros2_control with a controller parameter file
+
+  The F/T sensor sits on a preserved fixed joint, so Gazebo reports the wrench
+  that the tool (child) applies to the robot flange (parent), expressed in
+  `${prefix}ft_sensor_link`: contact wrench + 0.8 N tool weight.
+-->
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+
+  <xacro:macro name="sim_joint" params="name initial:=0.0 command_interface:=velocity">
+    <joint name="${name}">
+      <command_interface name="${command_interface}"/>
+      <state_interface name="position">
+        <param name="initial_value">${initial}</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:macro name="sim_ft_sensor" params="name:=tcp_fts_sensor">
+    <sensor name="${name}">
+      <state_interface name="force.x"/>
+      <state_interface name="force.y"/>
+      <state_interface name="force.z"/>
+      <state_interface name="torque.x"/>
+      <state_interface name="torque.y"/>
+      <state_interface name="torque.z"/>
+    </sensor>
+  </xacro:macro>
+
+  <!--
+    F/T sensor + spring-loaded probe (a compliant polishing head).
+
+      parent -(ft_sensor_joint, fixed: F/T sensor)-> ft_sensor_link
+             -(probe_joint, passive prismatic spring along +z)-> probe_link
+      ft_sensor_link -(fixed)-> tcp   (nominal tip, rigid w.r.t. the flange)
+
+    The spring makes contact with rigid work pieces well behaved for a
+    velocity-controlled arm: the measured force is k * deflection instead of
+    the impulses of a rigid impact. The cartesian controller controls `tcp`.
+
+    parent          link the sensor is bolted to (robot flange)
+    origin          sensor pose in `parent`; the probe points along the sensor +z axis
+    probe_length    length of the probe shaft [m]
+    probe_stiffness spring of the probe head [N/m] (travel +/- probe_travel)
+  -->
+  <xacro:macro name="ft_probe_tool"
+               params="parent *origin prefix:='' sensor_name:=tcp_fts_sensor update_rate:=500
+                       sensor_radius:=0.035 sensor_length:=0.03
+                       probe_length:=0.10 probe_radius:=0.008 tip_radius:=0.012
+                       probe_stiffness:=2000.0 probe_damping:=20.0 probe_travel:=0.02">
+    <xacro:property name="tip_z" value="${sensor_length + probe_length}"/>
+
+    <joint name="${prefix}ft_sensor_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="${prefix}ft_sensor_link"/>
+      <xacro:insert_block name="origin"/>
+    </joint>
+
+    <!-- sensor body -->
+    <link name="${prefix}ft_sensor_link">
+      <inertial>
+        <origin xyz="0 0 ${sensor_length / 2.0}" rpy="0 0 0"/>
+        <mass value="0.05"/>
+        <inertia ixx="2e-5" ixy="0" ixz="0" iyy="2e-5" iyz="0" izz="3e-5"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 ${sensor_length / 2.0}" rpy="0 0 0"/>
+        <geometry><cylinder radius="${sensor_radius}" length="${sensor_length}"/></geometry>
+        <material name="ft_sensor_grey"><color rgba="0.3 0.3 0.3 1"/></material>
+      </visual>
+    </link>
+
+    <!-- spring-loaded probe: shaft and spherical tip -->
+    <joint name="${prefix}probe_joint" type="prismatic">
+      <parent link="${prefix}ft_sensor_link"/>
+      <child link="${prefix}probe_link"/>
+      <origin xyz="0 0 ${sensor_length}" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="${-probe_travel}" upper="${probe_travel}" effort="1000" velocity="10"/>
+      <dynamics damping="${probe_damping}" friction="0"/>
+    </joint>
+    <link name="${prefix}probe_link">
+      <inertial>
+        <origin xyz="0 0 ${probe_length / 2.0}" rpy="0 0 0"/>
+        <mass value="0.03"/>
+        <inertia ixx="3e-5" ixy="0" ixz="0" iyy="3e-5" iyz="0" izz="1e-6"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 ${probe_length / 2.0}" rpy="0 0 0"/>
+        <geometry><cylinder radius="${probe_radius}" length="${probe_length}"/></geometry>
+        <material name="probe_silver"><color rgba="0.8 0.8 0.8 1"/></material>
+      </visual>
+      <visual>
+        <origin xyz="0 0 ${probe_length}" rpy="0 0 0"/>
+        <geometry><sphere radius="${tip_radius}"/></geometry>
+        <material name="probe_tip_red"><color rgba="0.8 0.1 0.1 1"/></material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 ${probe_length / 2.0}" rpy="0 0 0"/>
+        <geometry><cylinder radius="${probe_radius}" length="${probe_length}"/></geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 ${probe_length}" rpy="0 0 0"/>
+        <geometry><sphere radius="${tip_radius}"/></geometry>
+      </collision>
+    </link>
+
+    <!-- Tool centre point: nominal surface of the probe tip (spring at rest) -->
+    <joint name="${prefix}tcp_joint" type="fixed">
+      <parent link="${prefix}ft_sensor_link"/>
+      <child link="${prefix}tcp"/>
+      <origin xyz="0 0 ${tip_z + tip_radius}" rpy="0 0 0"/>
+    </joint>
+    <link name="${prefix}tcp"/>
+
+    <gazebo reference="${prefix}ft_sensor_joint">
+      <preserveFixedJoint>true</preserveFixedJoint>
+      <sensor name="${sensor_name}" type="force_torque">
+        <always_on>true</always_on>
+        <update_rate>${update_rate}</update_rate>
+        <topic>${sensor_name}</topic>
+        <force_torque>
+          <frame>child</frame>
+          <measure_direction>child_to_parent</measure_direction>
+        </force_torque>
+      </sensor>
+    </gazebo>
+    <gazebo reference="${prefix}probe_joint">
+      <springStiffness>${probe_stiffness}</springStiffness>
+      <springReference>0.0</springReference>
+    </gazebo>
+    <gazebo reference="${prefix}probe_link">
+      <!-- low friction so the probe can slide on the work piece -->
+      <mu1>0.1</mu1>
+      <mu2>0.1</mu2>
+    </gazebo>
+  </xacro:macro>
+
+  <!-- Passive probe joint, exposed read-only so that /joint_states (and TF) contain it -->
+  <xacro:macro name="sim_probe_joint" params="prefix:=''">
+    <joint name="${prefix}probe_joint">
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:macro name="gz_ros2_control_plugin" params="controllers_file">
+    <gazebo>
+      <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+        <parameters>${controllers_file}</parameters>
+      </plugin>
+    </gazebo>
+  </xacro:macro>
+
+</robot>

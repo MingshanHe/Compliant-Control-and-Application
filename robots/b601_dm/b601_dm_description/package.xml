@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>b601_dm_description</name>
+  <version>2.0.0</version>
+  <description>
+    URDF/xacro model and meshes of the Seeed Studio reBot Arm B601-DM, vendored from
+    Seeed-Projects/reBotArmController_ROS2 (see NOTICE).
+  </description>
+  <maintainer email="hemingshan_1999@163.com">MingshanHe</maintainer>
+  <license>Apache-2.0</license>
+  <author>Seeed Studio</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <exec_depend>joint_state_publisher_gui</exec_depend>
+  <exec_depend>robot_sim_bringup</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>rviz2</exec_depend>
+  <exec_depend>xacro</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

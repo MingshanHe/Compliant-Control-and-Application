@@ -1,0 +1,12 @@
+# colcon
+build/
+install/
+log/
+
+# Sources pulled with `vcs import robots < robots/robots.repos`
+robots/franka/franka_description/
+
+# Python / editors
+__pycache__/
+*.pyc
+.vscode/

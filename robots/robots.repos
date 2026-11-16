@@ -1,0 +1,10 @@
+# Upstream robot descriptions that are not released as binaries for this ROS distro.
+#
+#   vcs import robots < robots/robots.repos
+#
+# (UR5: ur_description comes from apt. B601-DM: vendored in robots/b601_dm.)
+repositories:
+  franka/franka_description:
+    type: git
+    url: https://github.com/frankarobotics/franka_description.git
+    version: 2.9.0

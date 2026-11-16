@@ -1,0 +1,12 @@
+# Read by robot_sim_bringup/launch/sim.launch.py
+robot:
+  description_file: urdf/franka.urdf.xacro
+  controllers_file: config/controllers.yaml
+  # Packages whose meshes Gazebo has to resolve (package:// URIs)
+  resource_packages: [franka_description]
+  fixed_frame: world
+  # Home TCP (ready pose, tool pointing down): [0.307, 0.0, 0.448] in fr3_link0.
+  # Car-wheel work piece for world:=polish, [x y z roll pitch yaw] in world:
+  # axle along y, top of the tyre (z = 0.378) 7 cm below the probe tip and
+  # 3 cm behind it so that the contact surface is slightly inclined.
+  workpiece_pose: [0.277, 0.0, 0.161, 0.0, 0.0, 1.5707963]

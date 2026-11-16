@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<!--
+  Curved work piece for the polishing demo: a car wheel (r = 0.217 m,
+  width = 0.161 m, same size as in the ROS 1 world) standing on its rim with
+  the axle along the model x axis. The model origin is the wheel centre.
+  It is static so that pressing on it does not roll it away.
+-->
+<sdf version="1.9">
+  <model name="car_wheel">
+    <static>true</static>
+    <link name="link">
+      <pose>0 0 0 0 1.5707963 0</pose>
+      <collision name="collision">
+        <geometry><cylinder><radius>0.21682</radius><length>0.16116</length></cylinder></geometry>
+        <surface>
+          <friction><ode><mu>0.3</mu><mu2>0.3</mu2></ode></friction>
+        </surface>
+      </collision>
+      <visual name="tyre">
+        <geometry><cylinder><radius>0.21682</radius><length>0.16116</length></cylinder></geometry>
+        <material>
+          <ambient>0.08 0.08 0.08 1</ambient>
+          <diffuse>0.1 0.1 0.1 1</diffuse>
+          <specular>0.2 0.2 0.2 1</specular>
+        </material>
+      </visual>
+      <visual name="rim">
+        <geometry><cylinder><radius>0.14</radius><length>0.165</length></cylinder></geometry>
+        <material>
+          <ambient>0.6 0.6 0.65 1</ambient>
+          <diffuse>0.7 0.7 0.75 1</diffuse>
+          <specular>0.9 0.9 0.9 1</specular>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

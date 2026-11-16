@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>cartesian_velocity_controller</name>
+  <version>2.0.0</version>
+  <description>ros2_control Cartesian velocity controller (KDL velocity IK) for serial manipulators.</description>
+  <maintainer email="hemingshan_1999@163.com">MingshanHe</maintainer>
+  <license>MIT</license>
+  <author>Jose Medina</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>cartesian_state_msgs</depend>
+  <depend>controller_interface</depend>
+  <depend>geometry_msgs</depend>
+  <depend>hardware_interface</depend>
+  <depend>kdl_parser</depend>
+  <depend>liborocos-kdl-dev</depend>
+  <depend>pluginlib</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_lifecycle</depend>
+  <depend>realtime_tools</depend>
+  <depend>urdf</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

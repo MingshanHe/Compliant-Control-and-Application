@@ -1,0 +1,20 @@
+b601_dm_description
+===================
+
+The robot model and meshes in this package are the reBot Arm B601-DM
+description by Seeed Studio, taken from
+
+  https://github.com/Seeed-Projects/reBotArmController_ROS2
+  path:    src/rebotarm_bringup/description/DM
+  commit:  87780c6a5c2fb43b55ddebda5eac375ceb9c5a40
+  license: Apache License 2.0 (see LICENSE)
+
+Modifications made for this repository:
+  * urdf/ReBot_Arm_DM.urdf converted to the xacro macro urdf/b601_dm_macro.xacro
+    (added a `parent` fixed joint, mesh URIs changed from
+    package://rebotarm_bringup/description/DM/meshes/ to
+    package://b601_dm_description/meshes/).
+  * Inertial blocks added to finger_left_link and finger_right_link, which have
+    none upstream (Gazebo drops non-fixed links without inertia).
+  * meshes/mujoco_collision/ not included (MuJoCo only).
+  * meshes/visual, meshes/collision and meshes/shared are unmodified.

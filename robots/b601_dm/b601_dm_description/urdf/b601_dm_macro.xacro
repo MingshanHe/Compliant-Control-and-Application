@@ -1,0 +1,489 @@
+<?xml version="1.0"?>
+<!--
+  Seeed Studio reBot Arm B601-DM (6-DoF + parallel gripper, DAMIAO motors).
+
+  Converted from ReBot_Arm_DM.urdf of
+  https://github.com/Seeed-Projects/reBotArmController_ROS2
+  (src/rebotarm_bringup/description/DM, commit 87780c6, Apache-2.0).
+  Changes: wrapped in a xacro macro with a `parent` joint, mesh URIs point to
+  this package, inertials added to the two finger links. See NOTICE.
+
+    parent -> base_link -> link1 ... link6 -> end_link (gripper, x axis = approach)
+                                              end_link -> finger_left_link / finger_right_link
+-->
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+  <xacro:macro name="b601_dm" params="parent *origin">
+    <joint name="base_joint" type="fixed">
+      <parent link="${parent}" />
+      <child link="base_link" />
+      <xacro:insert_block name="origin" />
+    </joint>
+
+    <material name="gripper_finger_black">
+      <color rgba="0.066667 0.074510 0.070588 1" />
+    </material>
+    <material name="gripper_carriage_grey">
+      <color rgba="0.239 0.278 0.271 1" />
+    </material>
+    <material name="gripper_rack_metal">
+      <color rgba="0.831373 0.847059 0.831373 1" />
+    </material>
+    <material name="gripper_seeed_yellow">
+      <color rgba="0.725 0.835 0.118 1" />
+    </material>
+    <material name="gripper_hardware_black">
+      <color rgba="0.019608 0.027451 0.023529 1" />
+    </material>
+    <material name="gripper_base_metal">
+      <color rgba="0.831373 0.847059 0.831373 1" />
+    </material>
+    <material name="anodized_grey">
+      <color rgba="0.831373 0.847059 0.831373 1" />
+    </material>
+    <material name="silver_trim">
+      <color rgba="0.878431 0.890196 0.874510 1" />
+    </material>
+    <material name="seeed_yellow">
+      <color rgba="0.73 0.84 0.12 1" />
+    </material>
+    <material name="matte_black">
+      <color rgba="0.066667 0.074510 0.070588 1" />
+    </material>
+    <material name="hardware_black">
+      <color rgba="0.019608 0.027451 0.023529 1" />
+    </material>
+    <link name="base_link">
+      <inertial>
+        <origin xyz="-7.849E-06 -1.1531E-06 0.029841" rpy="0 0 0" />
+        <mass value="0.83660000" />
+        <inertia ixx="0.00133040" ixy="0.00000001" ixz="0.00000000" iyy="0.00213119" iyz="0.00000000" izz="0.00275877" />
+      </inertial>
+      <visual name="base_link_silver_trim">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_base_link_silver_trim.stl" />
+        </geometry>
+        <material name="silver_trim" />
+      </visual>
+      <visual name="base_link_hardware_black">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_base_link_hardware_black.stl" />
+        </geometry>
+        <material name="hardware_black" />
+      </visual>
+      <visual name="base_link_matte_black">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_base_link_matte_black.stl" />
+        </geometry>
+        <material name="matte_black" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/collision/base_link.STL" />
+        </geometry>
+      </collision>
+    </link>
+    <link name="link1">
+      <inertial>
+        <origin xyz="0.000113614552951627 -0.000616319527051323 0.0236476372671394" rpy="0 0 0" />
+        <mass value="0.16130000" />
+        <inertia ixx="0.00025207" ixy="0.00000000" ixz="-0.00002832" iyy="0.00015464" iyz="0.00000000" izz="0.00023416" />
+      </inertial>
+      <visual name="link1_matte_black">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_link1_matte_black.stl" />
+        </geometry>
+        <material name="matte_black" />
+      </visual>
+      <visual name="link1_hardware_black">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_link1_hardware_black.stl" />
+        </geometry>
+        <material name="hardware_black" />
+      </visual>
+      <visual name="link1_anodized_grey">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_link1_anodized_grey.stl" />
+        </geometry>
+        <material name="anodized_grey" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/collision/link1.STL" />
+        </geometry>
+      </collision>
+    </link>
+    <joint name="joint1" type="revolute">
+      <origin xyz="-8.416E-05 0 0.08465" rpy="0 0 0" />
+      <parent link="base_link" />
+      <child link="link1" />
+      <axis xyz="0 0 1" />
+      <limit lower="-2.8" upper="2.8" effort="27" velocity="50" />
+    </joint>
+    <link name="link2">
+      <inertial>
+        <origin xyz="-0.13225622308888 -0.0030617036386309 -0.0308306967030205" rpy="0 0 0" />
+        <mass value="1.32660000" />
+        <inertia ixx="0.00073374" ixy="-0.00000043" ixz="0.00000851" iyy="0.01255987" iyz="0.00000128" izz="0.01281387" />
+      </inertial>
+      <visual name="link2_seeed_yellow">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_link2_seeed_yellow.stl" />
+        </geometry>
+        <material name="seeed_yellow" />
+      </visual>
+      <visual name="link2_matte_black">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_link2_matte_black.stl" />
+        </geometry>
+        <material name="matte_black" />
+      </visual>
+      <visual name="link2_hardware_black">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_link2_hardware_black.stl" />
+        </geometry>
+        <material name="hardware_black" />
+      </visual>
+      <visual name="link2_anodized_grey">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_link2_anodized_grey.stl" />
+        </geometry>
+        <material name="anodized_grey" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/collision/link2.STL" />
+        </geometry>
+      </collision>
+    </link>
+    <joint name="joint2" type="revolute">
+      <origin xyz="0.020084 0.031625 0.05555" rpy="-1.5708 0 0" />
+      <parent link="link1" />
+      <child link="link2" />
+      <axis xyz="0 0 -1" />
+      <limit lower="-3.14" upper="0" effort="27" velocity="50" />
+    </joint>
+    <link name="link3">
+      <inertial>
+        <origin xyz="0.121040035791843 -0.0536211076627949 -0.0310137854608077" rpy="0 0 0" />
+        <mass value="0.83530000" />
+        <inertia ixx="0.00046807" ixy="-0.00003456" ixz="-0.00004260" iyy="0.00632695" iyz="0.00000006" izz="0.00648221" />
+      </inertial>
+      <visual name="link3_seeed_yellow">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_link3_seeed_yellow.stl" />
+        </geometry>
+        <material name="seeed_yellow" />
+      </visual>
+      <visual name="link3_matte_black">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_link3_matte_black.stl" />
+        </geometry>
+        <material name="matte_black" />
+      </visual>
+      <visual name="link3_hardware_black">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_link3_hardware_black.stl" />
+        </geometry>
+        <material name="hardware_black" />
+      </visual>
+      <visual name="link3_anodized_grey">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_link3_anodized_grey.stl" />
+        </geometry>
+        <material name="anodized_grey" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/collision/link3.STL" />
+        </geometry>
+      </collision>
+    </link>
+    <joint name="joint3" type="revolute">
+      <origin xyz="-0.264 0 0" rpy="0 0 0" />
+      <parent link="link2" />
+      <child link="link3" />
+      <axis xyz="0 0 1" />
+      <limit lower="-3.14" upper="0" effort="27" velocity="50" />
+    </joint>
+    <link name="link4">
+      <inertial>
+        <origin xyz="0.0608200956293136 -0.0511711906613122 -0.030299458623927" rpy="0 0 0" />
+        <mass value="0.52000000" />
+        <inertia ixx="0.00045986" ixy="0.00024219" ixz="-0.00000672" iyy="0.00075258" iyz="-0.00000535" izz="0.00066742" />
+      </inertial>
+      <visual name="link4_seeed_yellow">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_link4_seeed_yellow.stl" />
+        </geometry>
+        <material name="matte_black" />
+      </visual>
+      <visual name="link4_matte_black">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_link4_matte_black.stl" />
+        </geometry>
+        <material name="matte_black" />
+      </visual>
+      <visual name="link4_hardware_black">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_link4_hardware_black.stl" />
+        </geometry>
+        <material name="hardware_black" />
+      </visual>
+      <visual name="link4_anodized_grey">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_link4_anodized_grey.stl" />
+        </geometry>
+        <material name="anodized_grey" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/collision/link4.STL" />
+        </geometry>
+      </collision>
+    </link>
+    <joint name="joint4" type="revolute">
+      <origin xyz="0.2426 -0.054 -0.001625" rpy="0 0 0" />
+      <parent link="link3" />
+      <child link="link4" />
+      <axis xyz="0 0 1" />
+      <limit lower="-1.87" upper="1.57" effort="7" velocity="200" />
+    </joint>
+    <link name="link5">
+      <inertial>
+        <origin xyz="-0.00502802058982517 1.73866206692364E-06 0.0386233236326755" rpy="0 0 0" />
+        <mass value="0.38300000" />
+        <inertia ixx="0.00019772" ixy="-0.00000062" ixz="-0.00002426" iyy="0.00021737" iyz="0.00000002" izz="0.00017191" />
+      </inertial>
+      <visual name="link5_matte_black">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_link5_matte_black.stl" />
+        </geometry>
+        <material name="matte_black" />
+      </visual>
+      <visual name="link5_hardware_black">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_link5_hardware_black.stl" />
+        </geometry>
+        <material name="hardware_black" />
+      </visual>
+      <visual name="link5_anodized_grey">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_link5_anodized_grey.stl" />
+        </geometry>
+        <material name="anodized_grey" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/collision/link5.STL" />
+        </geometry>
+      </collision>
+    </link>
+    <joint name="joint5" type="revolute">
+      <origin xyz="0.078308 -0.0375 -0.03" rpy="-1.5708 0 0" />
+      <parent link="link4" />
+      <child link="link5" />
+      <axis xyz="0 0 1" />
+      <limit lower="-1.57" upper="1.57" effort="7" velocity="200" />
+    </joint>
+    <link name="link6">
+      <inertial>
+        <origin xyz="3.76418727127126E-06 -0.000100908819946677 0.0253308606425965" rpy="0 0 0" />
+        <mass value="0.36630000" />
+        <inertia ixx="0.00015554" ixy="-0.00000" ixz="-0.00000" iyy="0.00015554" iyz="-0.0000" izz="0.00013966" />
+      </inertial>
+      <visual name="link6_matte_black">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_link6_matte_black.stl" />
+        </geometry>
+        <material name="matte_black" />
+      </visual>
+      <visual name="link6_hardware_black">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_link6_hardware_black.stl" />
+        </geometry>
+        <material name="hardware_black" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/collision/link6.STL" />
+        </geometry>
+      </collision>
+    </link>
+    <joint name="joint6" type="revolute">
+      <origin xyz="0.028008 0 0.04" rpy="0 1.5708 0" />
+      <parent link="link5" />
+      <child link="link6" />
+      <axis xyz="0 0 1" />
+      <limit lower="-3.14" upper="3.14" effort="7" velocity="200" />
+    </joint>
+    <link name="end_link">
+      <inertial>
+        <origin xyz="-0.0737654295815033 -9.5080995865868E-06 7.04327840286845E-06" rpy="0 0 0" />
+        <mass value="0.5000000" />
+        <inertia ixx="0.00037354" ixy="-0.00000011" ixz="0.00000050" iyy="0.00015830" iyz="0.00000348" izz="0.00045353" />
+      </inertial>
+      <visual name="gripper_base_seeed_yellow">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_gripper_base_seeed_yellow.stl" />
+        </geometry>
+        <material name="gripper_seeed_yellow" />
+      </visual>
+      <visual name="gripper_base_hardware_black">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_gripper_base_hardware_black.stl" />
+        </geometry>
+        <material name="gripper_hardware_black" />
+      </visual>
+      <visual name="gripper_base_metal">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_gripper_base_metal.stl" />
+        </geometry>
+        <material name="gripper_base_metal" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/collision/gripper_base.stl" />
+        </geometry>
+      </collision>
+    </link>
+    <joint name="end_joint" type="fixed">
+      <origin xyz="0 0 0.15539" rpy="0 -1.5708 3.1415" />
+      <parent link="link6" />
+      <child link="end_link" />
+      <axis xyz="0 0 0" />
+    </joint>
+    <link name="finger_left_link">
+      <visual name="finger_left_body">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_left_finger_finger_black.stl" />
+        </geometry>
+        <material name="gripper_finger_black" />
+      </visual>
+      <visual name="finger_left_carriage">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/shared/colored_left_finger_carriage_grey.stl" />
+        </geometry>
+        <material name="gripper_carriage_grey" />
+      </visual>
+      <visual name="finger_left_travel_stop">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/shared/colored_left_finger_travel_stop_yellow.stl" />
+        </geometry>
+        <material name="gripper_seeed_yellow" />
+      </visual>
+      <visual name="finger_left_crossed_rack">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_left_finger_rack_metal.stl" />
+        </geometry>
+        <material name="gripper_rack_metal" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/collision/left_finger.stl" />
+        </geometry>
+      </collision>
+        <!-- not in the upstream model: added so that Gazebo keeps the finger -->
+      <inertial>
+        <origin xyz="-0.044 0.014 0" rpy="0 0 0" />
+        <mass value="0.05" />
+        <inertia ixx="1e-5" ixy="0" ixz="0" iyy="1e-5" iyz="0" izz="1e-5" />
+      </inertial>
+    </link>
+    <joint name="finger_left" type="prismatic">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <parent link="end_link" />
+      <child link="finger_left_link" />
+      <axis xyz="0 1 0" />
+      <limit lower="0" upper="0.05" effort="8" velocity="0.08" />
+    </joint>
+    <link name="finger_right_link">
+      <visual name="finger_right_body">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_right_finger_finger_black.stl" />
+        </geometry>
+        <material name="gripper_finger_black" />
+      </visual>
+      <visual name="finger_right_carriage">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/shared/colored_right_finger_carriage_grey.stl" />
+        </geometry>
+        <material name="gripper_carriage_grey" />
+      </visual>
+      <visual name="finger_right_travel_stop">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/shared/colored_right_finger_travel_stop_yellow.stl" />
+        </geometry>
+        <material name="gripper_seeed_yellow" />
+      </visual>
+      <visual name="finger_right_crossed_rack">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/visual/colored_right_finger_rack_metal.stl" />
+        </geometry>
+        <material name="gripper_rack_metal" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://b601_dm_description/meshes/collision/right_finger.stl" />
+        </geometry>
+      </collision>
+        <!-- not in the upstream model: added so that Gazebo keeps the finger -->
+      <inertial>
+        <origin xyz="-0.044 -0.014 0" rpy="0 0 0" />
+        <mass value="0.05" />
+        <inertia ixx="1e-5" ixy="0" ixz="0" iyy="1e-5" iyz="0" izz="1e-5" />
+      </inertial>
+    </link>
+    <joint name="finger_right" type="prismatic">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <parent link="end_link" />
+      <child link="finger_right_link" />
+      <axis xyz="0 1 0" />
+      <limit lower="-0.05" upper="0" effort="8" velocity="0.08" />
+      <mimic joint="finger_left" multiplier="-1" offset="0" />
+    </joint>
+  </xacro:macro>
+</robot>

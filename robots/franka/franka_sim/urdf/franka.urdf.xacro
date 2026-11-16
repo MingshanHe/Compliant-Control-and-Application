@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!--
+  Franka Research 3 (FR3) for Gazebo Sim: upstream franka_description (no hand)
+  + wrist F/T sensor with a probe tool + gz_ros2_control.
+
+    world -> fr3_link0 -> ... -> fr3_link8 (flange) -> ft_sensor_link -> tcp
+
+  franka_description is not released for this ROS distro; it is pulled from
+  source with robots/robots.repos (see robots/README.md).
+-->
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="fr3">
+  <xacro:arg name="controllers_file" default="$(find franka_sim)/config/controllers.yaml"/>
+  <xacro:arg name="command_interface" default="velocity"/>
+  <xacro:property name="ci" value="$(arg command_interface)"/>
+
+  <xacro:include filename="$(find franka_description)/robots/common/franka_robot.xacro"/>
+  <xacro:include filename="$(find robot_sim_bringup)/urdf/sim_common.xacro"/>
+
+  <!-- Creates the `world` link and fixes fr3_link0 to it -->
+  <xacro:franka_robot robot_type="fr3" hand="false" ee_id="none" connected_to="world"
+                      xyz="0 0 0" rpy="0 0 0" with_sc="false"/>
+
+  <xacro:ft_probe_tool parent="fr3_link8">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </xacro:ft_probe_tool>
+
+  <!-- Home: the Franka "ready" pose, flange pointing down -->
+  <ros2_control name="fr3_gz" type="system">
+    <hardware>
+      <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+    </hardware>
+    <xacro:sim_joint name="fr3_joint1" initial="0.0" command_interface="${ci}"/>
+    <xacro:sim_joint name="fr3_joint2" initial="${-pi/4}" command_interface="${ci}"/>
+    <xacro:sim_joint name="fr3_joint3" initial="0.0" command_interface="${ci}"/>
+    <xacro:sim_joint name="fr3_joint4" initial="${-3*pi/4}" command_interface="${ci}"/>
+    <xacro:sim_joint name="fr3_joint5" initial="0.0" command_interface="${ci}"/>
+    <xacro:sim_joint name="fr3_joint6" initial="${pi/2}" command_interface="${ci}"/>
+    <xacro:sim_joint name="fr3_joint7" initial="${pi/4}" command_interface="${ci}"/>
+    <xacro:sim_probe_joint/>
+    <xacro:sim_ft_sensor name="tcp_fts_sensor"/>
+  </ros2_control>
+
+  <xacro:gz_ros2_control_plugin controllers_file="$(arg controllers_file)"/>
+</robot>

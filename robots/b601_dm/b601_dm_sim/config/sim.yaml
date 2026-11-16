@@ -1,0 +1,13 @@
+# Read by robot_sim_bringup/launch/sim.launch.py
+robot:
+  description_file: urdf/b601_dm.urdf.xacro
+  controllers_file: config/controllers.yaml
+  # Packages whose meshes Gazebo has to resolve (package:// URIs)
+  resource_packages: [b601_dm_description]
+  fixed_frame: world
+  # base_link is 0.40 m above the world origin (pedestal).
+  # Home TCP: [0.341, 0.0, 0.056] in base_link = [0.341, 0.0, 0.456] in world.
+  # Car-wheel work piece for world:=polish, [x y z roll pitch yaw] in world:
+  # axle along y, top of the tyre (z = 0.410) 4.6 cm below the probe tip and
+  # 3 cm in front of it so that the tyre clears the pedestal.
+  workpiece_pose: [0.371, 0.0, 0.193, 0.0, 0.0, 1.5707963]

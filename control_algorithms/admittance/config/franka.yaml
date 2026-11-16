@@ -1,0 +1,44 @@
+# Admittance control for the Franka FR3 (robots/franka/franka_sim).
+#   M * a + D * v + K * (x - x_desired) = F_external
+# Gains are the ROS 1 (sim-devel) values. Matrices are 6x6, row-major,
+# ordered [x y z rx ry rz] in fr3_link0.
+/**:
+  ros__parameters:
+    frequency: 100.0
+    mass_arm: [2.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+               0.0, 2.0, 0.0, 0.0, 0.0, 0.0,
+               0.0, 0.0, 2.0, 0.0, 0.0, 0.0,
+               0.0, 0.0, 0.0, 2.0, 0.0, 0.0,
+               0.0, 0.0, 0.0, 0.0, 2.0, 0.0,
+               0.0, 0.0, 0.0, 0.0, 0.0, 2.0]
+    damping_arm: [12.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                  0.0, 12.0, 0.0, 0.0, 0.0, 0.0,
+                  0.0, 0.0, 12.0, 0.0, 0.0, 0.0,
+                  0.0, 0.0, 0.0, 10.0, 0.0, 0.0,
+                  0.0, 0.0, 0.0, 0.0, 10.0, 0.0,
+                  0.0, 0.0, 0.0, 0.0, 0.0, 10.0]
+    stiffness_coupling: [10.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                         0.0, 20.0, 0.0, 0.0, 0.0, 0.0,
+                         0.0, 0.0, 10.0, 0.0, 0.0, 0.0,
+                         0.0, 0.0, 0.0, 10.0, 0.0, 0.0,
+                         0.0, 0.0, 0.0, 0.0, 10.0, 0.0,
+                         0.0, 0.0, 0.0, 0.0, 0.0, 10.0]
+
+    base_link: fr3_link0
+    end_link: tcp
+    # Equilibrium [x y z qx qy qz qw] in fr3_link0 (home pose, tool pointing down).
+    # Leave empty ([]) to use the pose at start-up.
+    desired_pose: [0.3069, 0.0, 0.4483, -0.9238795, 0.3826834, 0.0, 0.0]
+
+    arm_max_vel: 1.5
+    arm_max_acc: 1.0
+    # Forces/torques below these values are ignored (the probe weighs 0.5 N).
+    force_deadzone_thres: 1.0
+    torque_deadzone_thres: 0.2
+
+# Synthetic operator force for admittance_test.launch.py: +/- amplitude along
+# `direction` (base frame), 10 s square wave -> about +/- amplitude / K [m].
+wrench_signal_generate:
+  ros__parameters:
+    amplitude: 1.5
+    direction: [0.0, 0.0, 1.0]

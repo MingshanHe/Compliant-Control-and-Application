@@ -1,0 +1,13 @@
+# Example parameters for the Cartesian velocity controller.
+# Every robot in robots/ ships its own copy of this block in
+# <robot>_sim/config/controllers.yaml with the right root/tip links.
+cartesian_velocity_controller:
+  ros__parameters:
+    root_name: base_link        # chain root, also the frame of ~/ee_state and ~/command_cart_vel
+    tip_name: tool0             # controlled end-effector link
+    joints: []                  # optional sanity check: must equal the chain's movable joints
+    command_interface: velocity # velocity | position (position integrates the IK velocity)
+    publish_rate: 125.0         # [Hz] rate of ~/ee_state
+    command_timeout: 0.5        # [s] zero the twist if no command arrives (<= 0 disables)
+    velocity_scaling: 1.0       # joint speed limit = velocity_scaling * limit
+    max_joint_velocity: 0.0     # [rad/s] cap on the URDF velocity limits (<= 0: URDF only)

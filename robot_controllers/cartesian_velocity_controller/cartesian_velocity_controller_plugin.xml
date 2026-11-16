@@ -1,0 +1,10 @@
+<library path="cartesian_velocity_controller">
+  <class name="cartesian_velocity_controller/CartesianVelocityController"
+         type="cartesian_velocity_controller::CartesianVelocityController"
+         base_class_type="controller_interface::ControllerInterface">
+    <description>
+      Cartesian velocity controller: maps an end-effector twist to joint velocity
+      (or integrated position) commands with a KDL pseudo-inverse velocity IK solver.
+    </description>
+  </class>
+</library>

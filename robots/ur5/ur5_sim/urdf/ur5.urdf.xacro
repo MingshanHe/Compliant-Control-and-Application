@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!--
+  UR5 for Gazebo Sim: upstream ur_description (ur_type=ur5) + wrist F/T sensor
+  with a probe tool + gz_ros2_control.
+
+    world -> base_link -> ... -> tool0 -> ft_sensor_link -> tcp
+-->
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="ur5">
+  <xacro:arg name="controllers_file" default="$(find ur5_sim)/config/controllers.yaml"/>
+  <xacro:arg name="command_interface" default="velocity"/>
+  <xacro:property name="ci" value="$(arg command_interface)"/>
+  <xacro:property name="ur_config" value="$(find ur_description)/config/ur5"/>
+
+  <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro"/>
+  <xacro:include filename="$(find robot_sim_bringup)/urdf/sim_common.xacro"/>
+
+  <link name="world"/>
+  <xacro:ur_robot
+    name="ur5"
+    tf_prefix=""
+    parent="world"
+    joint_limits_parameters_file="${ur_config}/joint_limits.yaml"
+    kinematics_parameters_file="${ur_config}/default_kinematics.yaml"
+    physical_parameters_file="${ur_config}/physical_parameters.yaml"
+    visual_parameters_file="${ur_config}/visual_parameters.yaml">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </xacro:ur_robot>
+
+  <xacro:ft_probe_tool parent="tool0">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </xacro:ft_probe_tool>
+
+  <!-- Home: tool pointing down in front of the robot -->
+  <ros2_control name="ur5_gz" type="system">
+    <hardware>
+      <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+    </hardware>
+    <xacro:sim_joint name="shoulder_pan_joint" initial="0.0" command_interface="${ci}"/>
+    <xacro:sim_joint name="shoulder_lift_joint" initial="-1.5708" command_interface="${ci}"/>
+    <xacro:sim_joint name="elbow_joint" initial="1.5708" command_interface="${ci}"/>
+    <xacro:sim_joint name="wrist_1_joint" initial="-1.5708" command_interface="${ci}"/>
+    <xacro:sim_joint name="wrist_2_joint" initial="-1.5708" command_interface="${ci}"/>
+    <xacro:sim_joint name="wrist_3_joint" initial="0.0" command_interface="${ci}"/>
+    <xacro:sim_probe_joint/>
+    <xacro:sim_ft_sensor name="tcp_fts_sensor"/>
+  </ros2_control>
+
+  <xacro:gz_ros2_control_plugin controllers_file="$(arg controllers_file)"/>
+</robot>

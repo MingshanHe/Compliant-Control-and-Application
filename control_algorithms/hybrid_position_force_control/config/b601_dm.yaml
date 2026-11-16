@@ -1,0 +1,38 @@
+# Hybrid position/force control for the reBot Arm B601-DM (robots/b601_dm/b601_dm_sim), world:=polish.
+# Matrices are 6x6, row-major, ordered [x y z rx ry rz] in base_link.
+# In contact the tool presses with F = K * (surface - target): with K = 200 N/m
+# a target 4.5 cm below the surface gives about 9 N. The translational damping
+# is chosen for the 2000 N/m spring of the probe head (robot_sim_bringup).
+/**:
+  ros__parameters:
+    frequency: 100.0
+    mass_arm: [2.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+               0.0, 2.0, 0.0, 0.0, 0.0, 0.0,
+               0.0, 0.0, 2.0, 0.0, 0.0, 0.0,
+               0.0, 0.0, 0.0, 2.0, 0.0, 0.0,
+               0.0, 0.0, 0.0, 0.0, 2.0, 0.0,
+               0.0, 0.0, 0.0, 0.0, 0.0, 2.0]
+    damping_arm: [80.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                  0.0, 80.0, 0.0, 0.0, 0.0, 0.0,
+                  0.0, 0.0, 80.0, 0.0, 0.0, 0.0,
+                  0.0, 0.0, 0.0, 10.0, 0.0, 0.0,
+                  0.0, 0.0, 0.0, 0.0, 10.0, 0.0,
+                  0.0, 0.0, 0.0, 0.0, 0.0, 10.0]
+    stiffness_coupling: [200.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                         0.0, 200.0, 0.0, 0.0, 0.0, 0.0,
+                         0.0, 0.0, 200.0, 0.0, 0.0, 0.0,
+                         0.0, 0.0, 0.0, 5.0, 0.0, 0.0,
+                         0.0, 0.0, 0.0, 0.0, 5.0, 0.0,
+                         0.0, 0.0, 0.0, 0.0, 0.0, 5.0]
+
+    base_link: base_link
+    end_link: tcp
+    desired_pose: [0.3414, 0.0, 0.0563, 0.0, 0.9908, 0.0, 0.1350]
+
+    arm_max_vel: 1.5
+    arm_max_acc: 1.0
+    force_deadzone_thres: 1.0
+    torque_deadzone_thres: 0.0
+
+    # Speed [m/s] at which the reference moves to /desired_cartesian_pose_cmd
+    approach_speed: 0.05

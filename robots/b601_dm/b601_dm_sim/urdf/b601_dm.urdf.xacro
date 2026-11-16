@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!--
+  Seeed reBot Arm B601-DM for Gazebo Sim: vendored b601_dm_description
+  + F/T sensor with a probe tool held by the gripper + gz_ros2_control.
+
+    world -> base_link -> ... -> link6 -> end_link (gripper) -> ft_sensor_link -> tcp
+
+  The probe points along the gripper approach axis (end_link +x).
+  The arm stands on a 0.40 m pedestal (a desk arm on a table).
+-->
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="b601_dm">
+  <xacro:arg name="controllers_file" default="$(find b601_dm_sim)/config/controllers.yaml"/>
+  <xacro:arg name="command_interface" default="velocity"/>
+  <xacro:property name="ci" value="$(arg command_interface)"/>
+
+  <xacro:include filename="$(find b601_dm_description)/urdf/b601_dm_macro.xacro"/>
+  <xacro:include filename="$(find robot_sim_bringup)/urdf/sim_common.xacro"/>
+
+  <xacro:property name="pedestal_height" value="0.40"/>
+
+  <link name="world"/>
+  <link name="pedestal">
+    <visual>
+      <origin xyz="0 0 ${-pedestal_height / 2.0}" rpy="0 0 0"/>
+      <geometry><box size="0.22 0.22 ${pedestal_height}"/></geometry>
+      <material name="pedestal_grey"><color rgba="0.45 0.45 0.48 1"/></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 ${-pedestal_height / 2.0}" rpy="0 0 0"/>
+      <geometry><box size="0.22 0.22 ${pedestal_height}"/></geometry>
+    </collision>
+  </link>
+  <joint name="pedestal_joint" type="fixed">
+    <parent link="world"/>
+    <child link="pedestal"/>
+    <origin xyz="0 0 ${pedestal_height}" rpy="0 0 0"/>
+  </joint>
+  <xacro:b601_dm parent="pedestal">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </xacro:b601_dm>
+
+  <xacro:ft_probe_tool parent="end_link" sensor_radius="0.02" sensor_length="0.02"
+                       probe_length="0.06" probe_radius="0.006" tip_radius="0.01">
+    <origin xyz="0 0 0" rpy="0 ${pi/2} 0"/>
+  </xacro:ft_probe_tool>
+
+  <!-- Home: probe about 15 deg from vertical in front of the arm,
+       joint4 0.5 rad inside its limit (it limits how far the tool can point down) -->
+  <ros2_control name="b601_dm_gz" type="system">
+    <hardware>
+      <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+    </hardware>
+    <xacro:sim_joint name="joint1" initial="0.0" command_interface="${ci}"/>
+    <xacro:sim_joint name="joint2" initial="-1.5" command_interface="${ci}"/>
+    <xacro:sim_joint name="joint3" initial="-1.25" command_interface="${ci}"/>
+    <xacro:sim_joint name="joint4" initial="1.05" command_interface="${ci}"/>
+    <xacro:sim_joint name="joint5" initial="0.0" command_interface="${ci}"/>
+    <xacro:sim_joint name="joint6" initial="0.0" command_interface="${ci}"/>
+    <!-- Gripper: held closed (no controller); finger_right mimics finger_left -->
+    <xacro:sim_joint name="finger_left" initial="0.0" command_interface="position"/>
+    <joint name="finger_right">
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <xacro:sim_probe_joint/>
+    <xacro:sim_ft_sensor name="tcp_fts_sensor"/>
+  </ros2_control>
+
+  <xacro:gz_ros2_control_plugin controllers_file="$(arg controllers_file)"/>
+</robot>

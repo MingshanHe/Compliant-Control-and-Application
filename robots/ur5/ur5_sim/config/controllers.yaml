@@ -1,0 +1,31 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 500  # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+    force_torque_sensor_broadcaster:
+      type: force_torque_sensor_broadcaster/ForceTorqueSensorBroadcaster
+    cartesian_velocity_controller:
+      type: cartesian_velocity_controller/CartesianVelocityController
+
+force_torque_sensor_broadcaster:
+  ros__parameters:
+    sensor_name: tcp_fts_sensor
+    frame_id: ft_sensor_link
+
+cartesian_velocity_controller:
+  ros__parameters:
+    root_name: base_link
+    tip_name: tcp
+    joints:
+      - shoulder_pan_joint
+      - shoulder_lift_joint
+      - elbow_joint
+      - wrist_1_joint
+      - wrist_2_joint
+      - wrist_3_joint
+    command_interface: velocity
+    publish_rate: 125.0
+    command_timeout: 0.5
+    velocity_scaling: 1.0

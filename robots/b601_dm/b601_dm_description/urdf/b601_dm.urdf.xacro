@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!-- Stand-alone B601-DM model fixed to `world` (e.g. for RViz). -->
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="b601_dm">
+  <xacro:include filename="$(find b601_dm_description)/urdf/b601_dm_macro.xacro"/>
+  <link name="world"/>
+  <xacro:b601_dm parent="world">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </xacro:b601_dm>
+</robot>

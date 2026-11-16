@@ -1,0 +1,26 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 500  # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+    force_torque_sensor_broadcaster:
+      type: force_torque_sensor_broadcaster/ForceTorqueSensorBroadcaster
+    cartesian_velocity_controller:
+      type: cartesian_velocity_controller/CartesianVelocityController
+
+force_torque_sensor_broadcaster:
+  ros__parameters:
+    sensor_name: tcp_fts_sensor
+    frame_id: ft_sensor_link
+
+cartesian_velocity_controller:
+  ros__parameters:
+    root_name: base_link
+    tip_name: tcp
+    joints: [joint1, joint2, joint3, joint4, joint5, joint6]
+    command_interface: velocity
+    publish_rate: 125.0
+    command_timeout: 0.5
+    velocity_scaling: 1.0
+    max_joint_velocity: 2.0  # the URDF limits (50-200 rad/s) are not realistic
